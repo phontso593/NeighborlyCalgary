@@ -1,13 +1,15 @@
+
 import type { Metadata } from "next";
-import { cn } from "@/lib/utils";
+import { Inter } from "next/font/google";
 import "./globals.css";
-import { Header } from "@/components/layout/header";
-import { Footer } from "@/components/layout/footer";
-import { Toaster } from "@/components/ui/toaster";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "NeighborlyCalgary",
-  description: "Community donation platform to help Calgary, one donation at a time.",
+  title: "Neighbourly",
+  description: "Give what you can. Take what you need.",
 };
 
 export default function RootLayout({
@@ -16,18 +18,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="h-full">
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet" />
-        <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet" />
-      </head>
-      <body className={cn("font-body antialiased min-h-screen flex flex-col")}>
+    <html lang="en">
+      <body className={`${inter.className} flex flex-col min-h-screen bg-slate-50`}>
         <Header />
-        <main className="flex-grow">{children}</main>
+        <main className="flex-1">
+          {children}
+        </main>
         <Footer />
-        <Toaster />
       </body>
     </html>
   );
