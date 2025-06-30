@@ -1,0 +1,136 @@
+import type { DonationItem, Testimonial } from './types';
+
+export const allDonations: DonationItem[] = [
+  {
+    id: '1',
+    title: 'Cozy Winter Jacket',
+    description: 'A warm winter jacket, size medium. Gently used but in great condition. Perfect for Calgary winters.',
+    imageUrl: 'https://placehold.co/400x225.png',
+    aiHint: 'winter jacket',
+    category: 'Clothing',
+    location: 'Downtown',
+    donor: 'Jane D.',
+    tags: ['Urgent', 'Clothing'],
+  },
+  {
+    id: '2',
+    title: 'Sturdy Wooden Table',
+    description: 'A solid wood dining table, seats four. Some minor scratches but very functional. Must be picked up.',
+    imageUrl: 'https://placehold.co/400x225.png',
+    aiHint: 'wooden table',
+    category: 'Furniture',
+    location: 'Beltline',
+    donor: 'Community Helpers',
+    tags: ['New', 'Furniture'],
+  },
+  {
+    id: '3',
+    title: 'Children\'s Story Books',
+    description: 'A collection of 20+ story books for children aged 3-7. Various titles, all in good shape.',
+    imageUrl: 'https://placehold.co/400x225.png',
+    aiHint: 'story books',
+    category: 'Books',
+    location: 'Kensington',
+    donor: 'Mark S.',
+    tags: ['Popular', 'Books'],
+  },
+  {
+    id: '4',
+    title: 'Microwave Oven',
+    description: 'A clean, working microwave oven. Standard size. Great for a student or new family.',
+    imageUrl: 'https://placehold.co/400x225.png',
+    aiHint: 'microwave oven',
+    category: 'Appliances',
+    location: 'Mission',
+    donor: 'Anonymous',
+    tags: ['Appliances'],
+  },
+  {
+    id: '5',
+    title: 'Infant Car Seat',
+    description: 'Safety-certified infant car seat. Never been in an accident, expires in 2026. For infants up to 22 lbs.',
+    imageUrl: 'https://placehold.co/400x225.png',
+    aiHint: 'car seat',
+    category: 'Baby Items',
+    location: 'Bridgeland',
+    donor: 'The Garcia Family',
+    tags: ['Urgent', 'Baby Items'],
+  },
+  {
+    id: '6',
+    title: 'Set of Kitchen Knives',
+    description: 'A block of kitchen knives. Recently sharpened. Includes chef\'s knife, bread knife, and paring knives.',
+    imageUrl: 'https://placehold.co/400x225.png',
+    aiHint: 'kitchen knives',
+    category: 'Kitchenware',
+    location: 'East Village',
+    donor: 'Chef Mike',
+    tags: ['Popular', 'Kitchenware'],
+  },
+    {
+    id: '7',
+    title: 'HP Office Printer',
+    description: 'HP DeskJet printer, scanner, and copier. Works well, includes some ink cartridges.',
+    imageUrl: 'https://placehold.co/400x225.png',
+    aiHint: 'office printer',
+    category: 'Electronics',
+    location: 'Sunalta',
+    donor: 'Tech Recycle Inc.',
+    tags: ['Electronics'],
+  },
+  {
+    id: '8',
+    title: 'Beginner Acoustic Guitar',
+    description: 'A great starter acoustic guitar. Has a few dings but sounds good. Comes with a soft case.',
+    imageUrl: 'https://placehold.co/400x225.png',
+    aiHint: 'acoustic guitar',
+    category: 'Other',
+    location: 'Inglewood',
+    donor: 'Musicians for Good',
+    tags: ['Other'],
+  },
+];
+
+export const featuredDonations = allDonations.slice(0, 4);
+
+export const testimonials: Testimonial[] = [
+  {
+    id: 1,
+    quote: "Finding a crib for our newborn through NeighborlyCalgary was a blessing. The process was so simple and the donor was incredibly kind. Thank you for making our transition into parenthood a little easier.",
+    author: "The Smith Family",
+  },
+  {
+    id: 2,
+    quote: "I was able to clear out my garage and help a local student furnish their first apartment. It feels great to know my old furniture is getting a second life with someone who truly needs it.",
+    author: "David R.",
+  },
+  {
+    id: 3,
+    quote: "As an organization, we often have surplus goods. NeighborlyCalgary provides the perfect platform to connect us directly with the community members who can benefit most. It's efficient and heartwarming.",
+    author: "Calgary Community Food Hub",
+  },
+];
+
+export const donationCategories = [
+  "All",
+  "Clothing",
+  "Furniture",
+  "Electronics",
+  "Appliances",
+  "Kitchenware",
+  "Books",
+  "Baby Items",
+  "Other",
+];
+
+export const locations = [
+  "All",
+  "Downtown",
+  "Beltline",
+  "Kensington",
+  "Mission",
+  "Bridgeland",
+  "East Village",
+  "Sunalta",
+  "Inglewood",
+];
