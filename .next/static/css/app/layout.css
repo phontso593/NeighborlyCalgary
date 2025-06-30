@@ -643,9 +643,6 @@ video {
 .ml-2 {
   margin-left: 0.5rem;
 }
-.ml-4 {
-  margin-left: 1rem;
-}
 .mt-1 {
   margin-top: 0.25rem;
 }
@@ -879,9 +876,6 @@ video {
 }
 .text-center {
   text-align: center;
-}
-.font-serif {
-  font-family: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
 }
 .text-2xl {
   font-size: 1.5rem;
