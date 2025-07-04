@@ -3,9 +3,9 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ToyBrick, Shirt, BookOpen } from 'lucide-react';
 import landingImage from '@/assets/logo-landingpage.jpg';
 import FeatureCard from '@/components/FeatureCard';
+import { TeddyBearIcon, ShirtIcon, BooksIcon } from '@/components/DonationIcons';
 
 const LandingPage = () => {
   return (
@@ -59,22 +59,22 @@ const LandingPage = () => {
 
       {/* Featured Donations Section */}
       <section className="mt-16 md:mt-24">
-        <h2 className="text-3xl font-bold text-center text-blue-800 mb-10">
+        <h2 className="text-3xl font-bold text-blue-800 mb-8">
           Featured Donations
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           <FeatureCard
-            icon={<ToyBrick size={40} />}
+            icon={<TeddyBearIcon />}
             title="Children's Toys"
             description="Gently used toys for ages 3-7 available for donation."
           />
           <FeatureCard
-            icon={<Shirt size={40} />}
+            icon={<ShirtIcon />}
             title="Winter Clothes"
             description="Warm jackets and sweaters for families in need."
           />
           <FeatureCard
-            icon={<BookOpen size={40} />}
+            icon={<BooksIcon />}
             title="Books"
             description="A variety of books for all ages, ready to inspire."
           />
