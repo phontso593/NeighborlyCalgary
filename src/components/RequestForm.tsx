@@ -2,7 +2,7 @@
 'use client';
 import React, { useState } from "react";
 import { collection, addDoc, Timestamp } from "firebase/firestore";
-import { db } from "@/assets/firebaseConfig";
+import { db } from "@/lib/firebase";
 import { useRouter } from "next/navigation";
 
 const RequestForm = () => {

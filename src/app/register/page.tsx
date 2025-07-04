@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-import app from "@/assets/firebaseConfig";
+import app from "@/lib/firebase";
 import logo from "@/assets/neighborly-hor logo.png";
 
 const Register = () => {
