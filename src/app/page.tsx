@@ -4,6 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { ToyBrick, Shirt, BookOpen } from 'lucide-react';
+import landingImage from '@/assets/logo-landingpage.jpg';
 
 const FeatureCard = ({
   icon,
@@ -60,7 +61,7 @@ const LandingPage = () => {
           {/* Right Side: Image */}
           <div className="h-full">
             <Image
-              src="https://placehold.co/600x400.png"
+              src={landingImage}
               alt="Community donation event"
               data-ai-hint="community event"
               width={600}
