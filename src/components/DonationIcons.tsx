@@ -23,3 +23,37 @@ export const BooksIcon = () => (
     <path fill="#4169E1" d="M40 88a8 8 0 0 0-8 8v112a16 16 0 0 0 16 16h136a8 8 0 0 0 0-16H56V96a8 8 0 0 0-8-8Zm152 48h-24a8 8 0 0 0 0 16h24a8 8 0 0 0 0-16Z"/>
   </svg>
 );
+
+export const SignUpIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 256 256">
+    <path fill="#E0E0E0" d="M192 224H64a8 8 0 0 1-8-8V40a8 8 0 0 1 8-8h80l48 48v136a8 8 0 0 1-8 8Z"/>
+    <path fill="#BDBDBD" d="M144 32v48h48l-48-48Z"/>
+    <path fill="#FF9800" d="m144.51 120.51-48 48a4 4 0 0 0 0 5.66l10.34 10.34a4 4 0 0 0 5.66 0l48-48a4 4 0 0 0 0-5.66l-10.34-10.34a4 4 0 0 0-5.66 0Z"/>
+    <path fill="#FFC107" d="m154.85 110.17-16-16a4 4 0 0 0-5.66 0l-16 16a4 4 0 0 0 0 5.66l16 16a4 4 0 0 0 5.66 0l16-16a4 4 0 0 0 0-5.66Z"/>
+  </svg>
+);
+
+export const GiftIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 256 256">
+    <path fill="#E53935" d="M208 88H48a8 8 0 0 0-8 8v40h176V96a8 8 0 0 0-8-8Z"/>
+    <path fill="#E53935" d="M208 144H48v56a8 8 0 0 0 8 8h144a8 8 0 0 0 8-8v-56Z"/>
+    <path fill="#FFEB3B" d="M144 88v120h-32V88h32Z"/>
+    <path fill="#FFEB3B" d="M92.12 48a32 32 0 0 0-41.25 40h49.63A32.06 32.06 0 0 0 92.12 48Zm71.76 0a32.06 32.06 0 0 0-.52 40h49.63a32 32 0 0 0-49.11-40Z"/>
+  </svg>
+);
+
+export const ConnectIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 256 256">
+    <path fill="#FFC107" d="M232.49 88.51a56 56 0 0 0-79-79l-25.51 25.5-25.5-25.5a56 56 0 0 0-79 79L128 193.01l104.49-104.5Z"/>
+    <path fill="#FFFFFF" opacity="0.7" d="m159.42 122.75-19.1 14.64a8 8 0 0 1-9.9-.45l-33-28.88a8 8 0 0 1-.36-11.57l10-11.43a8 8 0 0 1 11.57-.36l18.82 16.46l18.49-14.2a8 8 0 0 1 9.9.45l24.75 32.12a8 8 0 0 1-10.67 12.22Z"/>
+    <path fill="#FFFFFF" opacity="0.7" d="m142.25 106.33-24.75-32.12a8 8 0 0 0-10.67-1.55l-19.1 14.64a8 8 0 0 0-1.12 11.75l33 28.88a8 8 0 0 0 9.9.45l18.49-14.2l18.82 16.46a8 8 0 0 0 11.57.36l10-11.43a8 8 0 0 0 .36-11.57Z"/>
+  </svg>
+);
+
+export const InspireIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 256 256">
+    <path fill="#64B5F6" d="M216 48H40a8 8 0 0 0-8 8v144a8 8 0 0 0 8 8h176a8 8 0 0 0 8-8V56a8 8 0 0 0-8-8Zm-8 144H48V64h160Z"/>
+    <path fill="#42A5F5" d="M128 64v128h88V64h-88Z" opacity="0.5"/>
+    <path fill="#FFFFFF" d="M72 96h40a8 8 0 0 0 0-16H72a8 8 0 0 0 0 16Zm0 32h80a8 8 0 0 0 0-16H72a8 8 0 0 0 0 16Zm0 32h64a8 8 0 0 0 0-16H72a8 8 0 0 0 0 16Z"/>
+  </svg>
+);
