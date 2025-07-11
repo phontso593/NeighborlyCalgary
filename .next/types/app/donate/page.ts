@@ -1,4 +1,4 @@
-// File: C:\Capstone(sem 5)\NeighborlyCalgary\src\app\donate\page.tsx
+// File: /home/user/studio/src/app/donate/page.tsx
 import * as entry from '../../../../src/app/donate/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 
