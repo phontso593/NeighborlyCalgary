@@ -18,7 +18,7 @@ const Login = () => {
     setLoading(true);
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      router.push("/dashboard");
+      router.push("/login-user");
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "An unknown error occurred";
       alert("Login failed: " + errorMessage);
@@ -30,7 +30,7 @@ const Login = () => {
     setLoading(true);
     try {
       await signInWithPopup(auth, provider);
-      router.push("/dashboard");
+      router.push("/login-user");
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "An unknown error occurred";
       alert("Login failed: " + errorMessage);

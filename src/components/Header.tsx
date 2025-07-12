@@ -32,7 +32,7 @@ const Header = () => {
           <div className="px-3 py-2 text-sm font-medium">Loading...</div>
         ) : user ? (
           <>
-            <Link href="/dashboard" className="px-3 py-2 rounded-md text-sm font-medium hover:bg-[#4040fb] transition-colors">
+            <Link href="/login-user" className="px-3 py-2 rounded-md text-sm font-medium hover:bg-[#4040fb] transition-colors">
               Dashboard
             </Link>
             <Link href="/donate" className="px-3 py-2 rounded-md text-sm font-medium hover:bg-[#4040fb] transition-colors">

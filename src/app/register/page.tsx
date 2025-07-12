@@ -29,7 +29,7 @@ const Register = () => {
           displayName: fullName,
         });
       }
-      router.push("/dashboard");
+      router.push("/login-user");
     } catch (error) {
       const errorCode = (error as { code?: string }).code;
       if (errorCode === 'auth/email-already-in-use') {
@@ -48,7 +48,7 @@ const Register = () => {
     setLoading(true);
     try {
       await signInWithPopup(auth, provider);
-      router.push("/dashboard");
+      router.push("/login-user");
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "An unknown error occurred";
       alert("Sign up failed: " + errorMessage);

@@ -44,7 +44,7 @@ const LandingPage = () => {
                 Sign Up
               </Link>
               <Link
-                href="/dashboard"
+                href="/login-user"
                 className="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-6 rounded-md transition-colors duration-300"
               >
                 Continue as Guest
