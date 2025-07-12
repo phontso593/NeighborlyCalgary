@@ -2,13 +2,9 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import Image from "next/image";
-import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, OAuthProvider } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, OAuthProvider, FacebookAuthProvider } from "firebase/auth";
 import app from "@/lib/firebase";
-import logo from "@/assets/neighborly-hor logo.png";
-import githubLogo from "@/assets/github logo.png";
-import googleLogo from "@/assets/google logo.jpg";
-import facebookLogo from "@/assets/facebook logo.webp";
+import { Github, Facebook, Share2 } from "lucide-react";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -22,7 +18,6 @@ const Login = () => {
     setLoading(true);
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      alert("Login successful!");
       router.push("/dashboard");
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "An unknown error occurred";
@@ -31,11 +26,10 @@ const Login = () => {
     setLoading(false);
   };
 
-  const handleSocialLogin = async (provider: GoogleAuthProvider | OAuthProvider) => {
+  const handleSocialLogin = async (provider: GoogleAuthProvider | OAuthProvider | FacebookAuthProvider) => {
     setLoading(true);
     try {
       await signInWithPopup(auth, provider);
-      alert("Login successful!");
       router.push("/dashboard");
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "An unknown error occurred";
@@ -46,26 +40,26 @@ const Login = () => {
 
   const handleGoogleLogin = () => handleSocialLogin(new GoogleAuthProvider());
   const handleGithubLogin = () => handleSocialLogin(new OAuthProvider('github.com'));
-  const handleFacebookLogin = () => handleSocialLogin(new OAuthProvider('facebook.com'));
+  const handleFacebookLogin = () => handleSocialLogin(new FacebookAuthProvider());
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md">
         <div className="flex justify-center">
-          <Image src={logo} alt="Neighborly Logo" width={80} height={80} />
+          <Share2 size={64} className="text-blue-600" />
         </div>
         <h2 className="text-2xl font-bold text-center text-gray-800">Welcome back</h2>
         <p className="text-sm text-center text-gray-500">Please enter your details to sign in.</p>
         
         <div className="flex justify-center space-x-4">
-          <button onClick={handleGithubLogin} className="p-2 border rounded-md hover:bg-gray-100">
-            <Image src={githubLogo} alt="GitHub" width={24} height={24} />
+          <button onClick={handleGithubLogin} className="p-3 border rounded-full hover:bg-gray-100">
+            <Github size={24} />
           </button>
-          <button onClick={handleGoogleLogin} className="p-2 border rounded-md hover:bg-gray-100">
-            <Image src={googleLogo} alt="Google" width={24} height={24} />
+          <button onClick={handleGoogleLogin} className="p-3 border rounded-full hover:bg-gray-100">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8c-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4C12.955 4 4 12.955 4 24s8.955 20 20 20s20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z"/><path fill="#FF3D00" d="m6.306 14.691l6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4C16.318 4 9.656 8.337 6.306 14.691z"/><path fill="#4CAF50" d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238A11.91 11.91 0 0 1 24 36c-5.202 0-9.619-3.317-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z"/><path fill="#1976D2" d="M43.611 20.083H42V20H24v8h11.303c-.792 2.237-2.231 4.166-4.087 5.574l6.19 5.238C42.021 35.596 44 30.138 44 24c0-1.341-.138-2.65-.389-3.917z"/></svg>
           </button>
-          <button onClick={handleFacebookLogin} className="p-2 border rounded-md hover:bg-gray-100">
-            <Image src={facebookLogo} alt="Facebook" width={24} height={24} />
+          <button onClick={handleFacebookLogin} className="p-3 border rounded-full hover:bg-gray-100">
+            <Facebook size={24} />
           </button>
         </div>
 
