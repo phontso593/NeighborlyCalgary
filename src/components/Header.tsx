@@ -3,7 +3,7 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image"; // Import the Image component
 import logo from '@/assets/neighborly-black-hor.png';
-import { LogOut } from 'lucide-react';
+import { LogOut, LogIn, UserPlus } from 'lucide-react';
 import { useAuth } from "@/hooks/useAuth";
 import { getAuth, signOut } from "firebase/auth";
 import { useRouter } from "next/navigation";
@@ -52,11 +52,25 @@ const Header = () => {
           </>
         ) : (
           <>
-            <Link href="/login" className="px-3 py-2 rounded-md text-sm font-medium hover:bg-[#4040fb] transition-colors">
+            <Link href="/how-it-works" className="nav-link">
+              How It Works
+            </Link>
+            <Link href="/browse" className="nav-link">
+              Browse
+            </Link>
+            <Link href="/about" className="nav-link">
+              About
+            </Link>
+            <Link href="/contact" className="nav-link">
+              Contact
+            </Link>
+            <Link href="/login" className="login-btn">
+              <LogIn size={16} className="mr-2" />
               Login
             </Link>
-            <Link href="/register" className="px-3 py-2 rounded-md text-sm font-medium hover:bg-[#4040fb] transition-colors">
-              Register
+            <Link href="/register" className="signup-btn">
+              <UserPlus size={16} className="mr-2" />
+              Sign Up
             </Link>
           </>
         )}
