@@ -48,12 +48,6 @@ const Header = () => {
           </>
         ) : (
           <>
-            <Link href="/donate" className="px-3 py-2 rounded-md text-sm font-medium hover:bg-[#4040fb] transition-colors">
-              Donate
-            </Link>
-            <Link href="/request" className="px-3 py-2 rounded-md text-sm font-medium hover:bg-[#4040fb] transition-colors">
-              Request
-            </Link>
             <Link href="/login" className="px-3 py-2 rounded-md text-sm font-medium hover:bg-[#4040fb] transition-colors">
               Login
             </Link>
