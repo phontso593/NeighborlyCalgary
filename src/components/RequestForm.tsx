@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { collection, addDoc, Timestamp } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/hooks/useAuth";
 
 const RequestForm = () => {
   const [item, setItem] = useState("");
@@ -11,6 +12,7 @@ const RequestForm = () => {
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("Clothes");
   const router = useRouter();
+  const { user } = useAuth();
 
   const categories = [
     "Clothes",
@@ -24,6 +26,11 @@ const RequestForm = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!user) {
+      alert("You must be logged in to make a request.");
+      router.push("/login");
+      return;
+    }
     try {
       await addDoc(collection(db, "requested"), {
         item,
@@ -31,6 +38,8 @@ const RequestForm = () => {
         description,
         category,
         createdAt: Timestamp.now(),
+        uid: user.uid,
+        requesterName: user.displayName || 'Anonymous',
       });
       alert(`Requested ${quantity} x ${item}`);
       setItem("");

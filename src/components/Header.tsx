@@ -3,7 +3,7 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image"; // Import the Image component
 import logo from '@/assets/neighborly-black-hor.png';
-import { Share2, LogOut } from 'lucide-react';
+import { LogOut } from 'lucide-react';
 import { useAuth } from "@/hooks/useAuth";
 import { getAuth, signOut } from "firebase/auth";
 import { useRouter } from "next/navigation";
@@ -26,7 +26,6 @@ const Header = () => {
   return (
     <header className="bg-[#0404e2] text-white p-4 flex justify-between items-center w-full">
       <Link href="/" className="flex items-center">
-      {/* This Image component now has its import */}
       <Image src={logo} alt="Neighborly Logo" width={200} height={300} className="h-12 w-auto" />
       </Link>
       <nav className="flex items-center space-x-2">
@@ -36,6 +35,9 @@ const Header = () => {
           <>
             <Link href="/login-user" className="px-3 py-2 rounded-md text-sm font-medium hover:bg-[#4040fb] transition-colors">
               Dashboard
+            </Link>
+            <Link href="/profile" className="px-3 py-2 rounded-md text-sm font-medium hover:bg-[#4040fb] transition-colors">
+              Profile
             </Link>
             <Link href="/donate" className="px-3 py-2 rounded-md text-sm font-medium hover:bg-[#4040fb] transition-colors">
               Donate

@@ -5,6 +5,8 @@ export interface Donation {
     description: string;
     category: string;
     createdAt?: { seconds: number };
+    uid?: string;
+    donorName?: string;
 }
 
 export interface Request {
@@ -14,4 +16,6 @@ export interface Request {
   description: string;
   category: string;
   createdAt?: { seconds: number };
+  uid?: string;
+  requesterName?: string;
 }

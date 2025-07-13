@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { collection, addDoc, Timestamp } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/hooks/useAuth";
 
 const DonateForm = () => {
   const [item, setItem] = useState("");
@@ -11,6 +12,7 @@ const DonateForm = () => {
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("Clothes");
   const router = useRouter();
+  const { user } = useAuth();
 
   const categories = [
     "Clothes",
@@ -24,6 +26,11 @@ const DonateForm = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!user) {
+      alert("You must be logged in to make a donation.");
+      router.push("/login");
+      return;
+    }
     try {
       await addDoc(collection(db, "donations"), {
         item,
@@ -31,6 +38,8 @@ const DonateForm = () => {
         description,
         category,
         createdAt: Timestamp.now(),
+        uid: user.uid,
+        donorName: user.displayName || 'Anonymous',
       });
       alert(`Donated ${quantity} x ${item}`);
       setItem("");
