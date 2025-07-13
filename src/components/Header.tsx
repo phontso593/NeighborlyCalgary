@@ -1,6 +1,8 @@
 'use client';
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
+import logo from '@/assets/neighborly-black-hor.png';
 import { LogOut, PackagePlus } from 'lucide-react';
 import { useAuth } from "@/hooks/useAuth";
 import { getAuth, signOut } from "firebase/auth";
@@ -24,7 +26,8 @@ const Header = () => {
   return (
     <header className="bg-[#0404e2] text-white p-4 flex justify-between items-center w-full">
       <Link href="/" className="flex items-center">
-        <span className="text-xl font-bold">Neighbourly</span>
+       
+      <Image src={logo} alt="Neighborly Logo" width={50} height={50} className="h-12 w-auto" />
       </Link>
       <nav className="flex items-center space-x-2">
         {loading ? (

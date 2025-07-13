@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from "react";
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "@/lib/firebase";
-import SearchAndFilter from "@/components/Search&Filter";
 import DonateForm from "@/components/DonateForm";
 import DonationsList from "@/components/DonationsList";
 import type { Donation } from "@/types";
@@ -21,7 +20,6 @@ const DonatePage = () => {
 
     return (
         <div>
-            <SearchAndFilter donations={donations} />      
             <DonateForm />
             <DonationsList donations={donations} />
         </div>
