@@ -1,6 +1,8 @@
 'use client';
 import React from "react";
 import Link from "next/link";
+import Image from "next/image"; // Import the Image component
+import logo from '@/assets/neighborly-black-hor.png';
 import { Share2, LogOut } from 'lucide-react';
 import { useAuth } from "@/hooks/useAuth";
 import { getAuth, signOut } from "firebase/auth";
@@ -24,8 +26,8 @@ const Header = () => {
   return (
     <header className="bg-[#0404e2] text-white p-4 flex justify-between items-center w-full">
       <Link href="/" className="flex items-center">
-        <Share2 size={32} className="text-white" />
-        <span className="ml-2 text-xl font-bold">Neighbourly</span>
+      {/* This Image component now has its import */}
+      <Image src={logo} alt="Neighborly Logo" width={200} height={300} className="h-12 w-auto" />
       </Link>
       <nav className="flex items-center space-x-2">
         {loading ? (
