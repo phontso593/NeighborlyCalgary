@@ -10,7 +10,6 @@ interface DonationsListProps {
 const DonationsList: React.FC<DonationsListProps> = ({ donations }) => {
     return (
         <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-            <h3 className="text-2xl font-bold text-center text-gray-800 mb-6">Recent Donations</h3>
             {donations.length === 0 ? (
                 <p className="text-center text-gray-500 italic">No donations available at the moment.</p>
             ) : (
