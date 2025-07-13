@@ -4,6 +4,9 @@ export interface Donation {
     quantity: number;
     description: string;
     category: string;
+    condition: string;
+    location: string;
+    imageUrl?: string;
     createdAt?: { seconds: number };
     uid?: string;
     donorName?: string;

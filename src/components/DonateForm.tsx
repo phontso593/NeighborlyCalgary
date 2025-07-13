@@ -11,6 +11,8 @@ const DonateForm = () => {
   const [quantity, setQuantity] = useState(1);
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("Clothes");
+  const [condition, setCondition] = useState("New");
+  const [location, setLocation] = useState("");
   const router = useRouter();
   const { user } = useAuth();
 
@@ -22,6 +24,15 @@ const DonateForm = () => {
     "Furniture",
     "Food",
     "Other",
+  ];
+
+  const conditions = [
+    "New",
+    "Like New",
+    "Gently Used",
+    "Used - Good",
+    "Used - Fair",
+    "Refurbished"
   ];
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -37,6 +48,8 @@ const DonateForm = () => {
         quantity: Number(quantity),
         description,
         category,
+        condition,
+        location,
         createdAt: Timestamp.now(),
         uid: user.uid,
         donorName: user.displayName || 'Anonymous',
@@ -46,6 +59,8 @@ const DonateForm = () => {
       setQuantity(1);
       setDescription("");
       setCategory("Clothes");
+      setCondition("New");
+      setLocation("");
       router.refresh();
     } catch (error) {
       console.error("Donation failed:", error);
@@ -97,6 +112,35 @@ const DonateForm = () => {
               </option>
             ))}
           </select>
+        </div>
+
+        <div>
+            <label htmlFor="condition" className="block font-bold mb-1">Condition:</label>
+            <select
+                id="condition"
+                value={condition}
+                onChange={(e) => setCondition(e.target.value)}
+                className="w-full p-2 border border-gray-300 rounded-md"
+            >
+                {conditions.map((cond) => (
+                <option key={cond} value={cond}>
+                    {cond}
+                </option>
+                ))}
+            </select>
+        </div>
+
+        <div>
+          <label htmlFor="location" className="block font-bold mb-1">Location / Drop-off:</label>
+          <input
+            id="location"
+            type="text"
+            value={location}
+            onChange={(e) => setLocation(e.target.value)}
+            required
+            placeholder="e.g. Downtown Library"
+            className="w-full p-2 border border-gray-300 rounded-md"
+          />
         </div>
 
         <div>

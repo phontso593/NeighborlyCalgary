@@ -2,8 +2,10 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { getAuth, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, updateProfile, OAuthProvider, FacebookAuthProvider } from "firebase/auth";
 import app from "@/lib/firebase";
+import logo from "@/assets/neighborly-hor logo.png";
 import { Github, Facebook, Share2 } from "lucide-react";
 
 const Register = () => {
@@ -63,8 +65,8 @@ const Register = () => {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md">
-        <div className="flex justify-center">
-            <Share2 size={64} className="text-blue-600" />
+      <div className="flex justify-center">
+          <Image src={logo} alt="Neighborly Logo" width={80} height={80} />
         </div>
         <h2 className="text-2xl font-bold text-center text-gray-800">Create Account</h2>
         

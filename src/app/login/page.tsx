@@ -2,8 +2,10 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, OAuthProvider, FacebookAuthProvider } from "firebase/auth";
 import app from "@/lib/firebase";
+import logo from "@/assets/neighborly-hor logo.png";
 import { Github, Facebook, Share2 } from "lucide-react";
 
 const Login = () => {
@@ -45,9 +47,9 @@ const Login = () => {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md">
-        <div className="flex justify-center">
-          <Share2 size={64} className="text-blue-600" />
-        </div>
+      <div className="flex justify-center">
+          <Image src={logo} alt="Neighborly Logo" width={80} height={80} />
+      </div>
         <h2 className="text-2xl font-bold text-center text-gray-800">Welcome back</h2>
         <p className="text-sm text-center text-gray-500">Please enter your details to sign in.</p>
         

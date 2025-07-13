@@ -1,3 +1,4 @@
+
 'use client';
 
 import React from 'react';
@@ -44,7 +45,7 @@ const LandingPage = () => {
                 Sign Up
               </Link>
               <Link
-                href="/login-user"
+                href="/browse"
                 className="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-6 rounded-md transition-colors duration-300"
               >
                 Continue as Guest
