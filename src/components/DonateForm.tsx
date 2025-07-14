@@ -111,7 +111,7 @@ const DonateForm = () => {
     let imageUrl = '';
     if (image) {
       try {
-        const storageRef = ref(storage, `donations/${user.uid}/${Date.now()}`);
+        const storageRef = ref(storage, `Donation/${user.uid}/${Date.now()}`);
         const uploadResult = await uploadString(storageRef, image, 'data_url');
         imageUrl = await getDownloadURL(uploadResult.ref);
       } catch (error) {
