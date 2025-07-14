@@ -1,5 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
+import { getStorage } from "firebase/storage";
 import { getAnalytics } from "firebase/analytics";
 
 // TODO: Add SDKs for Firebase products that you want to use
@@ -20,11 +21,13 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const storage = getStorage(app);
+
 
 // Initialize Analytics, only on client side
 if (typeof window !== "undefined") {
     getAnalytics(app);
 }
 
-export {db};
+export {db, storage};
 export default app;

@@ -1,65 +1,159 @@
 'use client';
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { collection, addDoc, Timestamp } from "firebase/firestore";
-import { db } from "@/lib/firebase";
+import { ref, uploadString, getDownloadURL } from "firebase/storage";
+import { db, storage } from "@/lib/firebase";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
-import { PackagePlus } from "lucide-react";
+import { PackagePlus, Camera, RefreshCw, Upload, X } from "lucide-react";
+import { useToast } from "@/components/ui/use-toast";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+
 
 const DonateForm = () => {
   const [item, setItem] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
   const [condition, setCondition] = useState("");
+  const [image, setImage] = useState<string | null>(null);
+  const [showCamera, setShowCamera] = useState(false);
+  const [hasCameraPermission, setHasCameraPermission] = useState<boolean | null>(null);
+
   const router = useRouter();
   const { user } = useAuth();
+  const { toast } = useToast();
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  const categories = [
-    "Clothes",
-    "Books",
-    "Toys",
-    "Electronics",
-    "Furniture",
-    "Food",
-    "Other",
-  ];
+  const categories = ["Clothes", "Books", "Toys", "Electronics", "Furniture", "Food", "Other"];
+  const conditions = ["New", "Like New", "Gently Used", "Used - Good", "Used - Fair", "Refurbished"];
 
-  const conditions = [
-    "New",
-    "Like New",
-    "Gently Used",
-    "Used - Good",
-    "Used - Fair",
-    "Refurbished"
-  ];
+  useEffect(() => {
+    return () => {
+      // Stop camera stream when component unmounts
+      if (videoRef.current && videoRef.current.srcObject) {
+        (videoRef.current.srcObject as MediaStream).getTracks().forEach(track => track.stop());
+      }
+    };
+  }, []);
+
+  const handleCameraAccess = async () => {
+    setShowCamera(true);
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        setHasCameraPermission(true);
+        if (videoRef.current) {
+          videoRef.current.srcObject = stream;
+        }
+      } catch (error) {
+        console.error("Error accessing camera:", error);
+        setHasCameraPermission(false);
+        toast({
+          variant: "destructive",
+          title: "Camera Access Denied",
+          description: "Please enable camera permissions in your browser settings.",
+        });
+        setShowCamera(false);
+      }
+    } else {
+        setHasCameraPermission(false);
+        toast({
+          variant: "destructive",
+          title: "Camera Not Supported",
+          description: "Your browser does not support camera access.",
+        });
+        setShowCamera(false);
+    }
+  };
+
+  const handleCapture = () => {
+    if (videoRef.current && canvasRef.current) {
+      const video = videoRef.current;
+      const canvas = canvasRef.current;
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      const context = canvas.getContext('2d');
+      if (context) {
+        context.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
+        const dataUrl = canvas.toDataURL('image/png');
+        setImage(dataUrl);
+      }
+      setShowCamera(false);
+       if (videoRef.current && videoRef.current.srcObject) {
+        (videoRef.current.srcObject as MediaStream).getTracks().forEach(track => track.stop());
+      }
+    }
+  };
+  
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        setImage(event.target?.result as string);
+      };
+      reader.readAsDataURL(e.target.files[0]);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!user) {
-      alert("You must be logged in to make a donation.");
+      toast({
+        variant: "destructive",
+        title: "Authentication Error",
+        description: "You must be logged in to make a donation.",
+      });
       router.push("/login");
       return;
     }
+    
+    let imageUrl = '';
+    if (image) {
+      try {
+        const storageRef = ref(storage, `donations/${user.uid}/${Date.now()}`);
+        const uploadResult = await uploadString(storageRef, image, 'data_url');
+        imageUrl = await getDownloadURL(uploadResult.ref);
+      } catch (error) {
+        console.error("Image upload failed:", error);
+        toast({
+          variant: "destructive",
+          title: "Upload Failed",
+          description: "Failed to upload image. Please try again.",
+        });
+        return;
+      }
+    }
+
     try {
       await addDoc(collection(db, "donations"), {
         item,
         description,
         category,
         condition,
+        imageUrl,
         createdAt: Timestamp.now(),
         uid: user.uid,
         donorName: user.displayName || 'Anonymous',
       });
-      alert(`Donated ${item}`);
+      toast({
+        title: "Success!",
+        description: `Donated ${item}`,
+      });
       setItem("");
       setDescription("");
       setCategory("");
       setCondition("");
+      setImage(null);
       router.refresh();
     } catch (error) {
       console.error("Donation failed:", error);
       const errorMessage = error instanceof Error ? error.message : "An unknown error occurred";
-      alert("Failed to donate: " + errorMessage);
+      toast({
+        variant: "destructive",
+        title: "Donation Failed",
+        description: errorMessage,
+      });
     }
   };
 
@@ -110,9 +204,7 @@ const DonateForm = () => {
                             className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-white"
                         >
                             <option value="" disabled>Select category</option>
-                            {categories.map((cat) => (
-                                <option key={cat} value={cat}>{cat}</option>
-                            ))}
+                            {categories.map((cat) => <option key={cat} value={cat}>{cat}</option>)}
                         </select>
                     </div>
 
@@ -126,30 +218,62 @@ const DonateForm = () => {
                             className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-white"
                         >
                             <option value="" disabled>Select condition</option>
-                            {conditions.map((cond) => (
-                                <option key={cond} value={cond}>{cond}</option>
-                            ))}
+                            {conditions.map((cond) => <option key={cond} value={cond}>{cond}</option>)}
                         </select>
                     </div>
                 </div>
 
                  <div>
-                    <label htmlFor="imageUpload" className="block text-sm font-medium text-gray-700 mb-1">Upload Image</label>
-                    <input
-                        id="imageUpload"
-                        type="file"
-                        className="w-full text-sm text-gray-500
-                                   file:mr-4 file:py-2 file:px-4
-                                   file:rounded-md file:border-0
-                                   file:text-sm file:font-semibold
-                                   file:bg-blue-50 file:text-blue-700
-                                   hover:file:bg-blue-100"
-                    />
-                </div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Upload Image</label>
+                    <div className="flex items-center gap-4">
+                        <button type="button" onClick={handleCameraAccess} className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-md text-sm font-medium hover:bg-gray-50">
+                            <Camera size={16} /> Use Camera
+                        </button>
+                        <label className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-md text-sm font-medium hover:bg-gray-50 cursor-pointer">
+                            <Upload size={16} /> Upload File
+                            <input type="file" accept="image/*" onChange={handleFileChange} className="hidden" />
+                        </label>
+                    </div>
+                 </div>
+                
+                 {showCamera && (
+                    <div className="fixed inset-0 bg-black bg-opacity-75 flex flex-col items-center justify-center z-50">
+                        <div className="bg-white p-4 rounded-lg shadow-xl w-full max-w-lg">
+                           <h3 className="text-lg font-bold mb-2">Camera Preview</h3>
+                           <video ref={videoRef} className="w-full aspect-video rounded-md bg-gray-900" autoPlay muted />
+                           <div className="flex justify-between mt-4">
+                             <button type="button" onClick={() => setShowCamera(false)} className="px-4 py-2 bg-gray-300 rounded-md">Cancel</button>
+                             <button type="button" onClick={handleCapture} className="px-4 py-2 bg-blue-600 text-white rounded-md">Take Picture</button>
+                           </div>
+                        </div>
+                    </div>
+                  )}
+
+                  <canvas ref={canvasRef} className="hidden"></canvas>
+
+                 {image && (
+                    <div className="mt-4 relative">
+                        <p className="text-sm font-medium text-gray-700 mb-2">Image Preview:</p>
+                        <img src={image} alt="Preview" className="rounded-md max-h-48 w-auto border" />
+                        <button type="button" onClick={() => setImage(null)} className="absolute top-0 right-0 p-1 bg-red-500 text-white rounded-full">
+                            <X size={16} />
+                        </button>
+                    </div>
+                 )}
+                 {hasCameraPermission === false && !showCamera && (
+                    <Alert variant="destructive">
+                      <AlertTitle>Camera Access Required</AlertTitle>
+                      <AlertDescription>
+                        Please allow camera access to use this feature. You might need to change permissions in your browser settings.
+                      </AlertDescription>
+                    </Alert>
+                 )}
+
 
                 <button
                     type="submit"
-                    className="w-full flex justify-center items-center gap-2 p-3 bg-blue-600 text-white font-bold rounded-md cursor-pointer hover:bg-blue-700 transition-colors"
+                    className="w-full flex justify-center items-center gap-2 p-3 bg-blue-600 text-white font-bold rounded-md cursor-pointer hover:bg-blue-700 transition-colors disabled:bg-blue-400"
+                    disabled={!item || !category || !condition}
                 >
                     <PackagePlus size={20} />
                     Submit Donation
