@@ -36,6 +36,11 @@ code {
   @apply px-4 py-2 text-sm font-medium text-white hover:text-gray-200 transition-colors;
 }
 
+.mobile-nav-link {
+  @apply block px-4 py-3 text-base font-medium text-white hover:bg-blue-700 transition-colors rounded-md;
+}
+
+
 .login-btn {
   @apply flex items-center bg-green-500 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-green-600 transition-colors;
 }

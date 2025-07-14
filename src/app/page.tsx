@@ -53,7 +53,7 @@ const LandingPage = () => {
             </div>
           </div>
           {/* Right Side: Image */}
-          <div className="h-full">
+          <div className="h-full hidden md:block">
             <Image
               src={landingImage}
               alt="Community donation event"
