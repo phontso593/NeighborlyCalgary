@@ -1,18 +1,16 @@
-
 'use client';
 import React, { useState } from "react";
 import { collection, addDoc, Timestamp } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
+import { PackagePlus } from "lucide-react";
 
 const DonateForm = () => {
   const [item, setItem] = useState("");
-  const [quantity, setQuantity] = useState(1);
   const [description, setDescription] = useState("");
-  const [category, setCategory] = useState("Clothes");
-  const [condition, setCondition] = useState("New");
-  const [location, setLocation] = useState("");
+  const [category, setCategory] = useState("");
+  const [condition, setCondition] = useState("");
   const router = useRouter();
   const { user } = useAuth();
 
@@ -45,22 +43,18 @@ const DonateForm = () => {
     try {
       await addDoc(collection(db, "donations"), {
         item,
-        quantity: Number(quantity),
         description,
         category,
         condition,
-        location,
         createdAt: Timestamp.now(),
         uid: user.uid,
         donorName: user.displayName || 'Anonymous',
       });
-      alert(`Donated ${quantity} x ${item}`);
+      alert(`Donated ${item}`);
       setItem("");
-      setQuantity(1);
       setDescription("");
-      setCategory("Clothes");
-      setCondition("New");
-      setLocation("");
+      setCategory("");
+      setCondition("");
       router.refresh();
     } catch (error) {
       console.error("Donation failed:", error);
@@ -70,96 +64,98 @@ const DonateForm = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto my-10 p-8 border-2 border-gray-200 rounded-xl bg-white shadow-md">
-       <h2 className="text-2xl font-bold text-center mb-6">Make a Donation</h2>
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-        <div>
-          <label htmlFor="item" className="block font-bold mb-1">Item Name:</label>
-          <input
-            id="item"
-            type="text"
-            value={item}
-            onChange={(e) => setItem(e.target.value)}
-            required
-            className="w-full p-2 border border-gray-300 rounded-md"
-          />
+    <div className="bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-10">
+            <h1 className="text-4xl font-bold text-blue-600">Add New Donation</h1>
+            <p className="mt-2 text-lg text-gray-600">Share your items with the community.</p>
         </div>
+        <div className="max-w-2xl mx-auto p-8 bg-white rounded-lg shadow-md border border-gray-200">
+            <h2 className="text-2xl font-bold text-blue-600 mb-2">Donation Details</h2>
+            <p className="text-gray-600 mb-6">Please fill out the form below to list your item.</p>
 
-        <div>
-          <label htmlFor="quantity" className="block font-bold mb-1">Quantity:</label>
-          <input
-            id="quantity"
-            type="number"
-            value={quantity}
-            min="1"
-            onChange={(e) => setQuantity(Number(e.target.value))}
-            required
-            className="w-24 p-2 border border-gray-300 rounded-md"
-          />
+            <form onSubmit={handleSubmit} className="space-y-6">
+                <div>
+                    <label htmlFor="item" className="block text-sm font-medium text-gray-700 mb-1">Item Title</label>
+                    <input
+                        id="item"
+                        type="text"
+                        value={item}
+                        onChange={(e) => setItem(e.target.value)}
+                        required
+                        placeholder="e.g., Winter Jacket, Set of Novels"
+                        className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                    />
+                </div>
+
+                <div>
+                    <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                    <textarea
+                        id="description"
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                        placeholder="Provide details about the item, its condition, size, etc."
+                        rows={4}
+                        className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                    />
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div>
+                        <label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-1">Category</label>
+                        <select
+                            id="category"
+                            value={category}
+                            onChange={(e) => setCategory(e.target.value)}
+                            required
+                            className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-white"
+                        >
+                            <option value="" disabled>Select category</option>
+                            {categories.map((cat) => (
+                                <option key={cat} value={cat}>{cat}</option>
+                            ))}
+                        </select>
+                    </div>
+
+                    <div>
+                        <label htmlFor="condition" className="block text-sm font-medium text-gray-700 mb-1">Condition</label>
+                        <select
+                            id="condition"
+                            value={condition}
+                            onChange={(e) => setCondition(e.target.value)}
+                            required
+                            className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-white"
+                        >
+                            <option value="" disabled>Select condition</option>
+                            {conditions.map((cond) => (
+                                <option key={cond} value={cond}>{cond}</option>
+                            ))}
+                        </select>
+                    </div>
+                </div>
+
+                 <div>
+                    <label htmlFor="imageUpload" className="block text-sm font-medium text-gray-700 mb-1">Upload Image</label>
+                    <input
+                        id="imageUpload"
+                        type="file"
+                        className="w-full text-sm text-gray-500
+                                   file:mr-4 file:py-2 file:px-4
+                                   file:rounded-md file:border-0
+                                   file:text-sm file:font-semibold
+                                   file:bg-blue-50 file:text-blue-700
+                                   hover:file:bg-blue-100"
+                    />
+                </div>
+
+                <button
+                    type="submit"
+                    className="w-full flex justify-center items-center gap-2 p-3 bg-blue-600 text-white font-bold rounded-md cursor-pointer hover:bg-blue-700 transition-colors"
+                >
+                    <PackagePlus size={20} />
+                    Submit Donation
+                </button>
+            </form>
         </div>
-
-        <div>
-          <label htmlFor="category" className="block font-bold mb-1">Category:</label>
-          <select
-            id="category"
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded-md"
-          >
-            {categories.map((cat) => (
-              <option key={cat} value={cat}>
-                {cat}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div>
-            <label htmlFor="condition" className="block font-bold mb-1">Condition:</label>
-            <select
-                id="condition"
-                value={condition}
-                onChange={(e) => setCondition(e.target.value)}
-                className="w-full p-2 border border-gray-300 rounded-md"
-            >
-                {conditions.map((cond) => (
-                <option key={cond} value={cond}>
-                    {cond}
-                </option>
-                ))}
-            </select>
-        </div>
-
-        <div>
-          <label htmlFor="location" className="block font-bold mb-1">Location / Drop-off:</label>
-          <input
-            id="location"
-            type="text"
-            value={location}
-            onChange={(e) => setLocation(e.target.value)}
-            required
-            placeholder="e.g. Downtown Library"
-            className="w-full p-2 border border-gray-300 rounded-md"
-          />
-        </div>
-
-        <div>
-          <label htmlFor="description" className="block font-bold mb-1">Description:</label>
-          <textarea
-            id="description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded-md min-h-[60px]"
-          />
-        </div>
-
-        <button
-          type="submit"
-          className="mt-2 p-3 bg-blue-600 text-white font-bold rounded-md cursor-pointer hover:bg-blue-700 transition-colors"
-        >
-          Donate
-        </button>
-      </form>
     </div>
   );
 };
