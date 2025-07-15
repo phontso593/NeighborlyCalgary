@@ -19,10 +19,12 @@ const SearchAndFilter: React.FC<SearchAndFilterProps> = ({
     useEffect(() => {
         const filtered = allDonations.filter((donation) => {
             const matchesCategory =
-                category === "All" || donation.category === category;
+                category === "All" || (donation.category && donation.category === category);
+            
             const matchesSearch =
-                donation.item.toLowerCase().includes(search.toLowerCase()) ||
-                donation.description.toLowerCase().includes(search.toLowerCase());
+                (donation.title && donation.title.toLowerCase().includes(search.toLowerCase())) ||
+                (donation.description && donation.description.toLowerCase().includes(search.toLowerCase()));
+
             return matchesCategory && matchesSearch;
         });
         onFilterChange(filtered);
