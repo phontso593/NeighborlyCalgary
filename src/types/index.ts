@@ -1,15 +1,14 @@
+
 export interface Donation {
     id: string;
-    item: string;
-    quantity: number;
+    title: string;
     description: string;
     category: string;
     condition: string;
-    location: string;
+    status: string;
     imageUrl?: string;
     createdAt?: { seconds: number };
-    uid?: string;
-    donorName?: string;
+    donatorId?: string;
 }
 
 export interface Request {

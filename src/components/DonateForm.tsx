@@ -1,3 +1,4 @@
+
 'use client';
 import React, { useState, useRef, useEffect } from "react";
 import { collection, addDoc, Timestamp } from "firebase/firestore";
@@ -7,10 +8,9 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth"; // Make sure this path is correct
 import { PackagePlus, Camera, Upload, X } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast"; // Make sure this path is correct
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"; // Make sure this path is correct
 
 const DonateForm = () => {
-  const [item, setItem] = useState("");
+  const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
   const [condition, setCondition] = useState("");
@@ -91,22 +91,21 @@ const DonateForm = () => {
       router.push("/login");
       return;
     }
-    if (!image) {
-      toast({ variant: "destructive", title: "Image Required", description: "Please upload an image for the item." });
-      return;
-    }
     
     setIsSubmitting(true);
 
     try {
-      // 1. Upload Image to Firebase Storage
-      const storageRef = ref(storage, `donations/${user.uid}/${Date.now()}`);
-      const uploadResult = await uploadString(storageRef, image, 'data_url');
-      const imageUrl = await getDownloadURL(uploadResult.ref);
+      let imageUrl = '';
+      if(image){
+         // 1. Upload Image to Firebase Storage
+        const storageRef = ref(storage, `donations/${user.uid}/${Date.now()}`);
+        const uploadResult = await uploadString(storageRef, image, 'data_url');
+        imageUrl = await getDownloadURL(uploadResult.ref);
+      }
 
       // 2. Add Donation document to Firestore
       await addDoc(collection(db, "donations"), {
-        title: item, // Use 'title' to be more descriptive
+        title: title, 
         description,
         category,
         condition,
@@ -114,13 +113,12 @@ const DonateForm = () => {
         status: "available", // Set default status
         createdAt: Timestamp.now(),
         donatorId: user.uid, // Correct field name for security rules
-        donorName: user.displayName || 'Anonymous',
       });
 
-      toast({ title: "Success!", description: `Donated ${item}` });
+      toast({ title: "Success!", description: `Donated ${title}` });
       
       // Reset form state
-      setItem("");
+      setTitle("");
       setDescription("");
       setCategory("");
       setCondition("");
@@ -147,7 +145,7 @@ const DonateForm = () => {
             <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
                     <label htmlFor="item-title" className="block text-sm font-medium text-gray-700 mb-1">Item Title</label>
-                    <input id="item-title" type="text" value={item} onChange={(e) => setItem(e.target.value)} required placeholder="e.g., Winter Jacket, Set of Novels" className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" />
+                    <input id="item-title" type="text" value={title} onChange={(e) => setTitle(e.target.value)} required placeholder="e.g., Winter Jacket, Set of Novels" className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" />
                 </div>
 
                 <div>
@@ -173,7 +171,7 @@ const DonateForm = () => {
                 </div>
 
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Upload Image</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Upload Image (Optional)</label>
                     <div className="flex items-center gap-4">
                         <button type="button" onClick={handleCameraAccess} className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-md text-sm font-medium hover:bg-gray-50">
                             <Camera size={16} /> Use Camera
@@ -209,7 +207,7 @@ const DonateForm = () => {
                     </div>
                 )}
 
-                <button type="submit" disabled={isSubmitting || !item || !category || !condition || !image} className="w-full flex justify-center items-center gap-2 p-3 bg-blue-600 text-white font-bold rounded-md cursor-pointer hover:bg-blue-700 transition-colors disabled:bg-blue-300 disabled:cursor-not-allowed">
+                <button type="submit" disabled={isSubmitting || !title || !category || !condition} className="w-full flex justify-center items-center gap-2 p-3 bg-blue-600 text-white font-bold rounded-md cursor-pointer hover:bg-blue-700 transition-colors disabled:bg-blue-300 disabled:cursor-not-allowed">
                     <PackagePlus size={20} />
                     {isSubmitting ? 'Submitting...' : 'Submit Donation'}
                 </button>

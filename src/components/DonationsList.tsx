@@ -21,7 +21,7 @@ const DonationsList: React.FC<DonationsListProps> = ({ donations }) => {
                             <div className="relative">
                                 <Image
                                     src={donation.imageUrl || `https://placehold.co/600x400.png`}
-                                    alt={donation.item}
+                                    alt={donation.title}
                                     width={600}
                                     height={400}
                                     className="w-full h-48 object-cover"
@@ -29,7 +29,7 @@ const DonationsList: React.FC<DonationsListProps> = ({ donations }) => {
                                 />
                             </div>
                             <div className="p-4 flex flex-col flex-grow">
-                                <h3 className="text-lg font-bold text-gray-800 mb-2 truncate">{donation.item}</h3>
+                                <h3 className="text-lg font-bold text-gray-800 mb-2 truncate">{donation.title}</h3>
                                 <div className="space-y-2 text-sm text-gray-600 mb-4">
                                     <div className="flex items-center gap-2">
                                         <Tag size={16} className="text-gray-500"/>
@@ -38,10 +38,6 @@ const DonationsList: React.FC<DonationsListProps> = ({ donations }) => {
                                     <div className="flex items-center gap-2">
                                         <HeartHandshake size={16} className="text-gray-500"/>
                                         <span>{donation.condition}</span>
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                        <MapPin size={16} className="text-gray-500"/>
-                                        <span>{donation.location}</span>
                                     </div>
                                     <div className="flex items-center gap-2">
                                         <CalendarDays size={16} className="text-gray-500"/>
