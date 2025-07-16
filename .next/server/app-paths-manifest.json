@@ -2,5 +2,6 @@
   "/page": "app/page.js",
   "/browse/page": "app/browse/page.js",
   "/profile/page": "app/profile/page.js",
-  "/donations/page": "app/donations/page.js"
+  "/donations/page": "app/donations/page.js",
+  "/how-it-works/page": "app/how-it-works/page.js"
 }
