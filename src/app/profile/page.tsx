@@ -1,3 +1,4 @@
+
 'use client';
 import React, { useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
@@ -98,7 +99,7 @@ const ProfilePage = () => {
                 <p className="text-gray-600">Profile editing is not yet available.</p>
               </div>
             )}
-            {!activeSection && <p className="text-center text-gray-500 italic">Further details about your activity will appear here.</p>}
+            {!activeSection && <p className="text-center text-gray-500 italic">Select an action above to manage your account.</p>}
           </div>
         </div>
       </div>
