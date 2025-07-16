@@ -1,9 +1,9 @@
-
 'use client';
 import React from "react";
 import Image from "next/image";
 import { doc, deleteDoc } from "firebase/firestore";
-import { db } from "@/lib/firebase";
+import { ref, deleteObject } from "firebase/storage";
+import { db, storage } from "@/lib/firebase";
 import type { Donation } from "@/types";
 import { Tag, HeartHandshake, CalendarDays, Trash2 } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
@@ -15,14 +15,22 @@ interface MyDonationsListProps {
 const MyDonationsList: React.FC<MyDonationsListProps> = ({ donations }) => {
     const { toast } = useToast();
 
-    const handleDelete = async (donationId: string, donationTitle: string) => {
-        if (!confirm(`Are you sure you want to delete the donation "${donationTitle}"?`)) {
+    const handleDelete = async (donation: Donation) => {
+        if (!confirm(`Are you sure you want to delete the donation "${donation.title}"?`)) {
             return;
         }
 
         try {
-            await deleteDoc(doc(db, "donations", donationId));
-            toast({ title: "Success!", description: `Donation "${donationTitle}" deleted.` });
+            // If an image URL exists, delete the image from Firebase Storage first
+            if (donation.imageUrl) {
+                const imageRef = ref(storage, donation.imageUrl);
+                await deleteObject(imageRef);
+            }
+
+            // Then delete the donation document from Firestore
+            await deleteDoc(doc(db, "donations", donation.id));
+            
+            toast({ title: "Success!", description: `Donation "${donation.title}" deleted.` });
         } catch (error) {
             console.error("Error deleting donation:", error);
             const errorMessage = error instanceof Error ? error.message : "An unknown error occurred";
@@ -69,7 +77,7 @@ const MyDonationsList: React.FC<MyDonationsListProps> = ({ donations }) => {
                                     </div>
                                 </div>
                                 <button
-                                    onClick={() => handleDelete(donation.id, donation.title)}
+                                    onClick={() => handleDelete(donation)}
                                     className="w-full mt-auto bg-red-600 text-white font-bold py-2 px-4 rounded-md hover:bg-red-700 transition-colors flex items-center justify-center gap-2"
                                 >
                                     <Trash2 size={16} />
