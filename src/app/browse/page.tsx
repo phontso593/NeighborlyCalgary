@@ -22,13 +22,13 @@ const BrowsePage = () => {
 
   return (
     <div className="max-w-7xl mx-auto my-10 p-4">
-      <SearchAndFilter allDonations={donations} onFilterChange={setFilteredDonations} />
       <div className="text-center my-8">
         <h1 className="text-4xl font-bold text-blue-600">Available Donations</h1>
         <p className="mt-2 text-md text-gray-600">
           Browse items generously donated by our community. Use the filters to find what you need.
         </p>
       </div>
+      <SearchAndFilter allDonations={donations} onFilterChange={setFilteredDonations} />
       <DonationsList donations={filteredDonations} />
     </div>
   );
