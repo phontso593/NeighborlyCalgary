@@ -83,7 +83,7 @@ const ProfilePage = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <ActionButton icon={<Edit size={20} />} text="Edit Profile" onClick={() => setActiveSection('edit')} />
             <ActionButton icon={<Box size={20} />} text="My Donations" onClick={() => router.push('/donations')} />
-            <ActionButton icon={<Heart size={20} />} text="My Requests" onClick={() => router.push('/requests')} />
+            <ActionButton icon={<Heart size={20} />} text="My Requests" onClick={() => router.push('/requested')} />
             <ActionButton
               icon={<LogOut size={20} />}
               text="Log Out"

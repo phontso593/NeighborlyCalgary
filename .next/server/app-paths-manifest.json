@@ -1,7 +1,11 @@
 {
-  "/page": "app/page.js",
-  "/browse/page": "app/browse/page.js",
   "/profile/page": "app/profile/page.js",
-  "/donations/page": "app/donations/page.js",
+  "/login/page": "app/login/page.js",
+  "/requested/page": "app/requested/page.js",
+  "/page": "app/page.js",
+  "/request/page": "app/request/page.js",
+  "/contact/page": "app/contact/page.js",
+  "/browse/page": "app/browse/page.js",
+  "/about/page": "app/about/page.js",
   "/how-it-works/page": "app/how-it-works/page.js"
 }
