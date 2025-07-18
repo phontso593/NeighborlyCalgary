@@ -114,7 +114,7 @@ const LandingPage = () => {
 
       {/* Success Stories Section */}
       <section className="mt-16 md:mt-24">
-        <h2 className="text-3xl font-bold text-gray-800 mb-8">
+        <h2 className="text-3xl font-bold text-blue-800 mb-8">
           Success Stories
         </h2>
         <div className="bg-white rounded-lg shadow-lg overflow-hidden">
@@ -130,10 +130,10 @@ const LandingPage = () => {
               />
             </div>
             <div className="p-8 md:p-12">
-              <h3 className="text-2xl font-bold mb-4">
+              <h3 className="text-2xl font-bold mb-4 text-blue-800">
                 A Community United
               </h3>
-              <p className="text-gray-600 mb-6">
+              <p className="text-blue-700 mb-6">
                 Read how our platform helped connect donors with recipients, creating a positive impact in our neighborhood through shared resources and support.
               </p>
               <Link href="/about" className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md transition-colors duration-300">
@@ -146,7 +146,7 @@ const LandingPage = () => {
       
       {/* Ready to Make a Difference Section */}
       <section className="mt-16 md:mt-24 text-center">
-        <h2 className="text-3xl font-bold text-gray-800 mb-6">
+        <h2 className="text-3xl font-bold text-blue-800 mb-6">
           Ready to Make a Difference?
         </h2>
         <Link href="/donate" className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-8 rounded-md transition-colors duration-300 inline-block">

@@ -23,8 +23,8 @@ const DonationCard: React.FC<DonationCardProps> = ({ imageUrl, imageAlt, title, 
         />
       </div>
       <div className="p-4">
-        <h3 className="font-bold text-lg mb-2 text-gray-800">{title}</h3>
-        <p className="text-gray-600 text-sm">{description}</p>
+        <h3 className="font-bold text-lg mb-2 text-blue-800">{title}</h3>
+        <p className="text-blue-700 text-sm">{description}</p>
       </div>
     </div>
   );
