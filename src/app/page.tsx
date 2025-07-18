@@ -1,20 +1,12 @@
-
 'use client';
 
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import landingImage from '@/assets/logo-landingpage.jpg';
-import FeatureCard from '@/components/FeatureCard';
-import {
-  TeddyBearIcon,
-  ShirtIcon,
-  BooksIcon,
-  SignUpIcon,
-  GiftIcon,
-  ConnectIcon,
-  InspireIcon,
-} from '@/components/DonationIcons';
+import HowItWorksCard from '@/components/HowItWorksCard';
+import DonationCard from '@/components/DonationCard';
+import { Gift, Search, Users } from 'lucide-react';
 
 const LandingPage = () => {
   return (
@@ -66,85 +58,56 @@ const LandingPage = () => {
         </div>
       </section>
 
+      {/* How it works Section */}
+      <section className="mt-16 md:mt-24">
+        <h2 className="text-3xl font-bold text-center text-gray-800 mb-8">
+          How It Works
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+          <HowItWorksCard
+            icon={<Gift size={24} className="text-blue-600" />}
+            title="Donate Items"
+            href="/donate"
+          />
+          <HowItWorksCard
+            icon={<Search size={24} className="text-blue-600" />}
+            title="Browse Requests"
+            href="/requests"
+          />
+          <HowItWorksCard
+            icon={<Users size={24} className="text-blue-600" />}
+            title="Connect with Community"
+            href="/about"
+          />
+        </div>
+      </section>
+
       {/* Featured Donations Section */}
       <section className="mt-16 md:mt-24">
         <h2 className="text-3xl font-bold text-center text-blue-800 mb-8">
           Featured Donations
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          <FeatureCard
-            icon={<TeddyBearIcon />}
+          <DonationCard
+            imageUrl="https://placehold.co/600x400.png"
+            imageAlt="Children's Toys"
             title="Children's Toys"
-            description="Gently used toys for ages 3-7 available for donation."
+            description="Gently used toys for all ages."
+            data-ai-hint="children toys"
           />
-          <FeatureCard
-            icon={<ShirtIcon />}
+          <DonationCard
+            imageUrl="https://placehold.co/600x400.png"
+            imageAlt="Winter Clothes"
             title="Winter Clothes"
             description="Warm jackets and sweaters for families in need."
+            data-ai-hint="winter clothes"
           />
-          <FeatureCard
-            icon={<BooksIcon />}
-            title="Books"
-            description="A variety of books for all ages, ready to inspire."
-          />
-        </div>
-      </section>
-
-      {/* How it works Section */}
-      <section className="mt-16 md:mt-24">
-        <div className="bg-blue-100 rounded-xl shadow-lg p-8 md:p-12">
-          <h2 className="text-3xl font-bold text-center text-blue-800 mb-12">
-            How it works
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-            <div className="flex flex-col items-center">
-              <SignUpIcon />
-              <h3 className="font-bold text-lg mt-4 mb-2 text-gray-800">
-                1. Sign Up or Login
-              </h3>
-              <p className="text-gray-600 text-sm">
-                Create an account or log in to join the community.
-              </p>
-            </div>
-            <div className="flex flex-col items-center">
-              <GiftIcon />
-              <h3 className="font-bold text-lg mt-4 mb-2 text-gray-800">
-                2. Donate or Request
-              </h3>
-              <p className="text-gray-600 text-sm">
-                List items to donate or request what you need.
-              </p>
-            </div>
-            <div className="flex flex-col items-center">
-              <ConnectIcon />
-              <h3 className="font-bold text-lg mt-4 mb-2 text-gray-800">
-                3. Connect & Share
-              </h3>
-              <p className="text-gray-600 text-sm">
-                Connect with neighbors and arrange exchanges easily.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Connect, Donate, Inspire Section */}
-      <section className="mt-16 md:mt-24">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          <FeatureCard
-            icon={<ConnectIcon />}
-            title="Connect"
-            description="Meet neighbors and build lasting relationships."
-          />
-          <FeatureCard
-            icon={<GiftIcon />}
-            title="Donate"
-            description="Share items you no longer need with those who do."
-          />
-          <FeatureCard
-            icon={<InspireIcon />}
-            title="Inspire"
-            description="Share your stories and inspire others to give back."
+          <DonationCard
+            imageUrl="https://placehold.co/600x400.png"
+            imageAlt="Book Collection"
+            title="Book Collection"
+            description="A variety of books for all ages."
+            data-ai-hint="books collection"
           />
         </div>
       </section>

@@ -1,7 +1,5 @@
 {
-  "/requested/page": "app/requested/page.js",
-  "/donations/page": "app/donations/page.js",
-  "/profile/page": "app/profile/page.js",
-  "/browse/page": "app/browse/page.js",
+  "/_not-found/page": "app/_not-found/page.js",
+  "/page": "app/page.js",
   "/donate/page": "app/donate/page.js"
 }
