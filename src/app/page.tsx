@@ -60,7 +60,7 @@ const LandingPage = () => {
 
       {/* How it works Section */}
       <section className="mt-16 md:mt-24">
-        <h2 className="text-3xl font-bold text-center text-gray-800 mb-8">
+        <h2 className="text-3xl font-bold text-center text-blue-800 mb-8">
           How It Works
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
@@ -84,7 +84,7 @@ const LandingPage = () => {
 
       {/* Featured Donations Section */}
       <section className="mt-16 md:mt-24">
-        <h2 className="text-3xl font-bold text-center text-blue-800 mb-8">
+        <h2 className="text-3xl font-bold text-blue-800 mb-8">
           Featured Donations
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
