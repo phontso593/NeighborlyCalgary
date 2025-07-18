@@ -17,8 +17,8 @@ const DonationCard: React.FC<DonationCardProps> = ({ imageUrl, imageAlt, title, 
         <Image
           src={imageUrl}
           alt={imageAlt}
-          layout="fill"
-          objectFit="cover"
+          fill
+          className="object-cover"
           data-ai-hint={dataAiHint}
         />
       </div>
