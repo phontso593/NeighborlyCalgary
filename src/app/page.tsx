@@ -89,7 +89,7 @@ const LandingPage = () => {
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           <DonationCard
-            imageUrl="/pexels-pixabay-159711.jpg"
+            imageUrl="https://firebasestorage.googleapis.com/v0/b/neighborlycalgary.appspot.com/o/pexels-pixabay-159711.jpg?alt=media"
             imageAlt="Books for Education"
             title="Books for Education"
             description="Support local schools with educational materials."
