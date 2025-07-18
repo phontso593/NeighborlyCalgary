@@ -90,24 +90,24 @@ const LandingPage = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           <DonationCard
             imageUrl="https://placehold.co/600x400.png"
-            imageAlt="Children's Toys"
-            title="Children's Toys"
-            description="Gently used toys for all ages."
-            data-ai-hint="children toys"
+            imageAlt="Books for Education"
+            title="Books for Education"
+            description="Support local schools with educational materials."
+            data-ai-hint="books education"
           />
           <DonationCard
             imageUrl="https://placehold.co/600x400.png"
-            imageAlt="Winter Clothes"
-            title="Winter Clothes"
-            description="Warm jackets and sweaters for families in need."
-            data-ai-hint="winter clothes"
+            imageAlt="Clothing for All Seasons"
+            title="Clothing for All Seasons"
+            description="Provide essential clothing to those in need."
+            data-ai-hint="clothing donation"
           />
           <DonationCard
             imageUrl="https://placehold.co/600x400.png"
-            imageAlt="Book Collection"
-            title="Book Collection"
-            description="A variety of books for all ages."
-            data-ai-hint="books collection"
+            imageAlt="Toys for Children"
+            title="Toys for Children"
+            description="Bring joy to children with donated toys."
+            data-ai-hint="toys children"
           />
         </div>
       </section>
