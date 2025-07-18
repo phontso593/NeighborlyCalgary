@@ -89,7 +89,7 @@ const LandingPage = () => {
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           <DonationCard
-            imageUrl="https://placehold.co/600x400.png"
+            imageUrl="/pexels-pixabay-159711.jpg"
             imageAlt="Books for Education"
             title="Books for Education"
             description="Support local schools with educational materials."
