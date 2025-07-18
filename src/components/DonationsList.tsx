@@ -3,7 +3,7 @@
 import {useState} from "react";
 import Image from "next/image";
 import type { Donation } from "@/types";
-import { Tag, HeartHandshake, MapPin, CalendarDays } from "lucide-react";
+import { Tag, HeartHandshake, MapPin, CalendarDays, MessageSquare } from "lucide-react";
 
 interface DonationsListProps {
     donations: Donation[];
@@ -52,11 +52,17 @@ const DonationsList: React.FC<DonationsListProps> = ({ donations }) => {
                                 <p className="text-sm text-gray-700 flex-grow mb-4 h-16 overflow-hidden">
                                     {donation.description}
                                 </p>
-                                <button className="w-full mt-auto bg-blue-600 text-white font-bold py-2 px-4 rounded-md hover:bg-blue-700 transition-colors"
-                                    onClick={() => setSelectedDonation(donation)}
-                                >
-                                    View Details
-                                </button>
+                                <div className="mt-auto flex flex-col gap-2">
+                                    <button className="w-full bg-blue-600 text-white font-bold py-2 px-4 rounded-md hover:bg-blue-700 transition-colors"
+                                        onClick={() => setSelectedDonation(donation)}
+                                    >
+                                        View Details
+                                    </button>
+                                     <button className="w-full flex items-center justify-center bg-gray-600 text-white font-bold py-2 px-4 rounded-md hover:bg-gray-700 transition-colors">
+                                        <MessageSquare size={16} className="mr-2"/>
+                                        Message User
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     ))}
