@@ -111,6 +111,48 @@ const LandingPage = () => {
           />
         </div>
       </section>
+
+      {/* Success Stories Section */}
+      <section className="mt-16 md:mt-24">
+        <h2 className="text-3xl font-bold text-gray-800 mb-8">
+          Success Stories
+        </h2>
+        <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+          <div className="grid md:grid-cols-2 items-center">
+            <div className="h-full">
+              <Image
+                src="https://placehold.co/600x400.png"
+                alt="A community success story"
+                data-ai-hint="community donation"
+                width={600}
+                height={400}
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <div className="p-8 md:p-12">
+              <h3 className="text-2xl font-bold mb-4">
+                A Community United
+              </h3>
+              <p className="text-gray-600 mb-6">
+                Read how our platform helped connect donors with recipients, creating a positive impact in our neighborhood through shared resources and support.
+              </p>
+              <Link href="/about" className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md transition-colors duration-300">
+                Read...
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      {/* Ready to Make a Difference Section */}
+      <section className="mt-16 md:mt-24 text-center">
+        <h2 className="text-3xl font-bold text-gray-800 mb-6">
+          Ready to Make a Difference?
+        </h2>
+        <Link href="/donate" className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-8 rounded-md transition-colors duration-300 inline-block">
+          Start Donating
+        </Link>
+      </section>
     </main>
   );
 };
