@@ -1,9 +1,10 @@
+
 'use client';
 import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import logo from '@/assets/neighborly-black-hor.png';
-import { LogOut, PackagePlus, Menu, X } from 'lucide-react';
+import logo from '@/assets/whitePrancheta 12.png';
+import { LogOut, PackagePlus, Menu, X, MessageSquare } from 'lucide-react';
 import { useAuth } from "@/hooks/useAuth";
 import { getAuth, signOut } from "firebase/auth";
 import { useRouter } from "next/navigation";
