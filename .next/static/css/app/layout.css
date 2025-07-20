@@ -844,6 +844,9 @@ video {
 .min-h-screen {
   min-height: 100vh;
 }
+.min-h-\[100px\] {
+  min-height: 100px;
+}
 .w-10 {
   width: 2.5rem;
 }
@@ -1256,6 +1259,9 @@ video {
 }
 .p-12 {
   padding: 3rem;
+}
+.p-0 {
+  padding: 0px;
 }
 .px-3 {
   padding-left: 0.75rem;
@@ -1863,6 +1869,11 @@ code {
 .hover\:bg-green-700:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(21 128 61 / var(--tw-bg-opacity, 1));
+}
+
+.hover\:bg-gray-200:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(229 231 235 / var(--tw-bg-opacity, 1));
 }
 
 .hover\:text-accent-foreground:hover {

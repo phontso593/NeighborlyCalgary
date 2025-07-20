@@ -1,10 +1,10 @@
 
 'use client';
 import React, { useState, useEffect, useRef } from 'react';
-import { collection, query, onSnapshot, addDoc, orderBy, doc, getDoc, Timestamp } from 'firebase/firestore';
+import { collection, query, onSnapshot, addDoc, orderBy, doc, getDoc, Timestamp, updateDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { useAuth } from '@/hooks/useAuth';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import type { Message, Conversation } from '@/types';
 import { SendHorizonal, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
@@ -12,6 +12,7 @@ import Link from 'next/link';
 const ChatPage = ({ params }: { params: { messageId: string } }) => {
   const { user, loading } = useAuth();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const chatId = params.messageId;
   const [messages, setMessages] = useState<Message[]>([]);
   const [conversation, setConversation] = useState<Conversation | null>(null);
@@ -20,10 +21,17 @@ const ChatPage = ({ params }: { params: { messageId: string } }) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    const initialMessage = searchParams.get('message');
+    if (initialMessage) {
+        setNewMessage(decodeURIComponent(initialMessage));
+    }
+  }, [searchParams]);
+
+  useEffect(() => {
     if (user && chatId) {
       // Fetch conversation details
       const convoDocRef = doc(db, 'chats', chatId);
-      getDoc(convoDocRef).then(docSnap => {
+      const unsubConvo = onSnapshot(convoDocRef, (docSnap) => {
         if (docSnap.exists()) {
           const convoData = { id: docSnap.id, ...docSnap.data() } as Conversation;
           if (!convoData.participants.includes(user.uid)) {
@@ -36,16 +44,20 @@ const ChatPage = ({ params }: { params: { messageId: string } }) => {
         }
       });
 
+
       // Listen for messages
       const messagesColRef = collection(db, 'chats', chatId, 'messages');
       const q = query(messagesColRef, orderBy('timestamp', 'asc'));
 
-      const unsubscribe = onSnapshot(q, (snapshot) => {
+      const unsubMessages = onSnapshot(q, (snapshot) => {
         const msgs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Message));
         setMessages(msgs);
       });
 
-      return () => unsubscribe();
+      return () => {
+        unsubConvo();
+        unsubMessages();
+      };
     }
   }, [user, chatId, router]);
 
@@ -67,13 +79,27 @@ const ChatPage = ({ params }: { params: { messageId: string } }) => {
         return;
     }
 
-    try {
-      await addDoc(collection(db, 'chats', chatId, 'messages'), {
+    const messageData = {
         text: newMessage,
         senderId: user.uid,
         receiverId: otherParticipantId,
         timestamp: Timestamp.now(),
+      };
+
+    try {
+      // Add new message to subcollection
+      await addDoc(collection(db, 'chats', chatId, 'messages'), messageData);
+
+      // Update the lastMessage on the parent chat document
+      const chatDocRef = doc(db, 'chats', chatId);
+      await updateDoc(chatDocRef, {
+        lastMessage: {
+            text: newMessage,
+            senderId: user.uid,
+            timestamp: serverTimestamp(),
+        }
       });
+
       setNewMessage('');
     } catch (error) {
       console.error('Error sending message:', error);
