@@ -5,7 +5,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { getAuth, signOut } from 'firebase/auth';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { User as UserIcon, Edit, Box, Heart, LogOut } from 'lucide-react';
+import { User as UserIcon, Edit, Box, Heart, LogOut, MessageSquare } from 'lucide-react';
 
 const ProfilePage = () => {
   const { user, loading } = useAuth();
@@ -84,11 +84,12 @@ const ProfilePage = () => {
             <ActionButton icon={<Edit size={20} />} text="Edit Profile" onClick={() => setActiveSection('edit')} />
             <ActionButton icon={<Box size={20} />} text="My Donations" onClick={() => router.push('/donations')} />
             <ActionButton icon={<Heart size={20} />} text="My Requests" onClick={() => router.push('/requested')} />
+            <ActionButton icon={<MessageSquare size={20} />} text="My Messages" onClick={() => router.push('/messages')} />
             <ActionButton
               icon={<LogOut size={20} />}
               text="Log Out"
               onClick={handleLogout}
-              className="bg-red-500 text-white hover:bg-red-600"
+              className="bg-red-500 text-white hover:bg-red-600 sm:col-span-2"
             />
           </div>
 

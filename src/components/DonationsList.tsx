@@ -2,8 +2,12 @@
 'use client';
 import {useState} from "react";
 import Image from "next/image";
-import type { Donation } from "@/types";
-import { Tag, HeartHandshake, MapPin, CalendarDays, MessageSquare } from "lucide-react";
+import type { Item as Donation } from "@/types";
+import { Tag, HeartHandshake, CalendarDays, MessageSquare } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
+import { useRouter } from "next/navigation";
+import { collection, query, where, getDocs, addDoc, serverTimestamp, doc, setDoc, Timestamp } from "firebase/firestore";
+import { db } from "@/lib/firebase";
 
 interface DonationsListProps {
     donations: Donation[];
@@ -11,6 +15,53 @@ interface DonationsListProps {
 
 const DonationsList: React.FC<DonationsListProps> = ({ donations }) => {
     const [selectedDonation, setSelectedDonation] = useState<Donation | null>(null);
+    const { user } = useAuth();
+    const router = useRouter();
+
+    const handleMessageDonator = async (donation: Donation) => {
+        if (!user) {
+            router.push('/login');
+            return;
+        }
+
+        if (user.uid === donation.ownerId) {
+            alert("You cannot message yourself.");
+            return;
+        }
+
+        const chatId = [user.uid, donation.ownerId].sort().join('_') + `_${donation.id}`;
+        const chatDocRef = doc(db, 'chats', chatId);
+
+        try {
+            // Check if chat already exists
+            const chatQuery = query(collection(db, "chats"), where("participants", "==", [user.uid, donation.ownerId].sort()), where("itemId", "==", donation.id));
+            const querySnapshot = await getDocs(chatQuery);
+            
+            if (!querySnapshot.empty) {
+                // Chat exists, navigate to it
+                const existingChat = querySnapshot.docs[0];
+                router.push(`/messages/${existingChat.id}`);
+            } else {
+                // Chat does not exist, create it
+                await setDoc(chatDocRef, {
+                    participants: [user.uid, donation.ownerId].sort(),
+                    participantNames: {
+                        [user.uid]: user.displayName || 'Anonymous',
+                        [donation.ownerId]: donation.ownerName || 'Anonymous',
+                    },
+                    itemId: donation.id,
+                    itemName: donation.title,
+                    createdAt: Timestamp.now(),
+                    lastMessage: null,
+                });
+                router.push(`/messages/${chatId}`);
+            }
+        } catch (error) {
+            console.error("Error creating or finding chat:", error);
+            alert("Could not start a conversation. Please try again.");
+        }
+    };
+
     return (
         <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
             {donations.length === 0 ? (
@@ -58,9 +109,9 @@ const DonationsList: React.FC<DonationsListProps> = ({ donations }) => {
                                     >
                                         View Details
                                     </button>
-                                     <button className="w-full flex items-center justify-center bg-gray-600 text-white font-bold py-2 px-4 rounded-md hover:bg-gray-700 transition-colors">
+                                     <button onClick={() => handleMessageDonator(donation)} className="w-full flex items-center justify-center bg-gray-600 text-white font-bold py-2 px-4 rounded-md hover:bg-gray-700 transition-colors">
                                         <MessageSquare size={16} className="mr-2"/>
-                                        Message User
+                                        Message {donation.ownerName || 'User'}
                                     </button>
                                 </div>
                             </div>
@@ -76,7 +127,7 @@ const DonationsList: React.FC<DonationsListProps> = ({ donations }) => {
                             className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
                             onClick={() => setSelectedDonation(null)}
                         >
-                            <span className="text-xl font-bold">&times;</span>
+                            <span className="text-2xl font-bold">&times;</span>
                         </button>
                         <h2 className="text-2xl font-bold mb-2">{selectedDonation.title}</h2>
                         <Image
@@ -84,22 +135,25 @@ const DonationsList: React.FC<DonationsListProps> = ({ donations }) => {
                             alt={selectedDonation.title}
                             width={600}
                             height={400}
-                            className="w-full h-48 object-contain bg-gray-100 mb-4"
+                            className="w-full h-48 object-contain bg-gray-100 mb-4 rounded"
                         />
-                        <div className="mb-2">
-                            <strong>Category:</strong> {selectedDonation.category}
-                        </div>
-                        <div className="mb-2">
-                            <strong>Condition:</strong> {selectedDonation.condition}
-                        </div>
-                        <div className="mb-2">
-                            <strong>Date:</strong> {selectedDonation.createdAt?.seconds
+                        <div className="space-y-2 text-gray-700">
+                            <p><strong>Category:</strong> {selectedDonation.category}</p>
+                            <p><strong>Condition:</strong> {selectedDonation.condition}</p>
+                            <p><strong>Donated By:</strong> {selectedDonation.ownerName || 'Anonymous'}</p>
+                            <p><strong>Date:</strong> {selectedDonation.createdAt?.seconds
                                 ? new Date(selectedDonation.createdAt.seconds * 1000).toLocaleDateString()
                                 : "N/A"}
+                            </p>
+                            <p className="pt-2 border-t"><strong>Description:</strong> {selectedDonation.description}</p>
                         </div>
-                        <div className="mb-2">
-                            <strong>Description:</strong> {selectedDonation.description}
-                        </div>
+                         <button
+                            onClick={() => handleMessageDonator(selectedDonation)}
+                            className="w-full mt-4 flex items-center justify-center bg-green-600 text-white font-bold py-2 px-4 rounded-md hover:bg-green-700 transition-colors"
+                        >
+                            <MessageSquare size={16} className="mr-2"/>
+                            Message {selectedDonation.ownerName || 'User'}
+                        </button>
                     </div>
                 </div>
             )}
