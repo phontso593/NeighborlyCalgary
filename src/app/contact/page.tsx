@@ -73,7 +73,7 @@ const ContactPage = () => {
                 <div>
                   <h3 className="text-lg font-semibold text-gray-800">Email</h3>
                   <a href="mailto:support@givinghub.example.com" className="text-blue-600 hover:underline">
-                    support@givinghub.example.com
+                    support@neighborly.ca
                   </a>
                 </div>
               </div>
