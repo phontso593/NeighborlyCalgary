@@ -1,6 +1,7 @@
 
 import React from 'react';
 import Image from 'next/image';
+import phontsoImage from '@/assets/phontso.png';
 
 const CollaborationIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
@@ -67,38 +68,62 @@ const AboutPage = () => {
             <div className="flex flex-col items-center">
               <Image 
                 src="https://placehold.co/200x200.png"
-                alt="Sophia Lee"
-                data-ai-hint="portrait woman"
-                width={160}
-                height={160}
-                className="rounded-full shadow-md"
-              />
-              <h3 className="mt-4 text-lg font-bold text-blue-800">Sophia Lee</h3>
-              <p className="text-sm text-blue-500">Executive Director</p>
-            </div>
-            <div className="flex flex-col items-center">
-              <Image 
-                src="https://placehold.co/200x200.png"
-                alt="Ethan Ramirez"
+                alt="Ruben Macalma"
                 data-ai-hint="portrait man"
                 width={160}
                 height={160}
                 className="rounded-full shadow-md"
               />
-              <h3 className="mt-4 text-lg font-bold text-blue-800">Ethan Ramirez</h3>
-              <p className="text-sm text-blue-500">Program Manager</p>
+              <h3 className="mt-4 text-lg font-bold text-blue-800">Ruben Macalma </h3>
+              <p className="text-sm text-blue-500">Front-end and Back-end coder</p>
             </div>
             <div className="flex flex-col items-center">
               <Image 
                 src="https://placehold.co/200x200.png"
-                alt="Olivia Bennett"
+                alt="Jaspreet Kaur"
                 data-ai-hint="portrait woman"
                 width={160}
                 height={160}
                 className="rounded-full shadow-md"
               />
-              <h3 className="mt-4 text-lg font-bold text-blue-800">Olivia Bennett</h3>
-              <p className="text-sm text-blue-500">Community Outreach Coordinator</p>
+              <h3 className="mt-4 text-lg font-bold text-blue-800">Jaspreet Kaur </h3>
+              <p className="text-sm text-blue-500">Front-end and Back-end coder</p>
+            </div>
+            <div className="flex flex-col items-center">
+              <Image 
+                src={phontsoImage}
+                alt="Phontso Tsetan"
+                data-ai-hint="portrait man"
+                width={160}
+                height={160}
+                className="rounded-full shadow-md"
+              />
+              <h3 className="mt-4 text-lg font-bold text-blue-800">Phontso Tsetan </h3>
+              <p className="text-sm text-blue-500">Team Leader and Backend manager</p>
+            </div>
+            <div className="flex flex-col items-center">
+              <Image 
+                src="https://placehold.co/200x200.png"
+                alt="Juan Buritica"
+                data-ai-hint="portrait man"
+                width={160}
+                height={160}
+                className="rounded-full shadow-md"
+              />
+              <h3 className="mt-4 text-lg font-bold text-blue-800">Juan Buritica</h3>
+              <p className="text-sm text-blue-500">Front-end Designe</p>
+            </div>
+            <div className="flex flex-col items-center">
+              <Image 
+                src="https://placehold.co/200x200.png"
+                alt="Nathalie Sales"
+                data-ai-hint="portrait woman"
+                width={160}
+                height={160}
+                className="rounded-full shadow-md"
+              />
+              <h3 className="mt-4 text-lg font-bold text-blue-800">Nathalie Sales</h3>
+              <p className="text-sm text-blue-500">Marketing and Designe</p>
             </div>
           </div>
         </div>
