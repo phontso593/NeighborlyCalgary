@@ -1,9 +1,9 @@
 
 import React from 'react';
-import Image from 'next/image';
+import Image, { StaticImageData } from 'next/image';
 
 interface DonationCardProps {
-  imageUrl: string;
+  imageUrl: string | StaticImageData;
   imageAlt: string;
   title: string;
   description: string;
@@ -20,6 +20,7 @@ const DonationCard: React.FC<DonationCardProps> = ({ imageUrl, imageAlt, title, 
           fill
           className="object-cover"
           data-ai-hint={dataAiHint}
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
         />
       </div>
       <div className="p-4">

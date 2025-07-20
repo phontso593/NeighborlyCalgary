@@ -1,3 +1,4 @@
+
 'use client';
 
 import React from 'react';
@@ -7,6 +8,10 @@ import landingImage from '@/assets/logo-landingpage.jpg';
 import HowItWorksCard from '@/components/HowItWorksCard';
 import DonationCard from '@/components/DonationCard';
 import { Gift, Search, Users } from 'lucide-react';
+import booksImage from '@/assets/pexels-pixabay-159711.jpg';
+import clothingImage from '@/assets/pexels-hngstrm-1210484.jpg';
+import toysImage from '@/assets/pexels-polesietoys-6129382.jpg';
+import successImage from '@/assets/pexels-julia-m-cameron-6994870.jpg';
 
 const LandingPage = () => {
   return (
@@ -89,21 +94,21 @@ const LandingPage = () => {
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           <DonationCard
-            imageUrl="https://firebasestorage.googleapis.com/v0/b/neighborlycalgary.appspot.com/o/pexels-pixabay-159711.jpg?alt=media"
+            imageUrl={booksImage}
             imageAlt="Books for Education"
             title="Books for Education"
             description="Support local schools with educational materials."
             data-ai-hint="books education"
           />
           <DonationCard
-            imageUrl="https://placehold.co/600x400.png"
+            imageUrl={clothingImage}
             imageAlt="Clothing for All Seasons"
             title="Clothing for All Seasons"
             description="Provide essential clothing to those in need."
             data-ai-hint="clothing donation"
           />
           <DonationCard
-            imageUrl="https://placehold.co/600x400.png"
+            imageUrl={toysImage}
             imageAlt="Toys for Children"
             title="Toys for Children"
             description="Bring joy to children with donated toys."
@@ -121,7 +126,7 @@ const LandingPage = () => {
           <div className="grid md:grid-cols-2 items-center">
             <div className="h-full">
               <Image
-                src="https://placehold.co/600x400.png"
+                src={successImage}
                 alt="A community success story"
                 data-ai-hint="community donation"
                 width={600}
