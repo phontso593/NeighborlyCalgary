@@ -6,7 +6,7 @@ import type { Donation } from "@/types";
 import { Tag, HeartHandshake, CalendarDays, MessageSquare, X } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
-import { collection, query, where, getDocs, doc, setDoc, Timestamp, addDoc, serverTimestamp } from "firebase/firestore";
+import { collection, query, where, getDocs, doc, setDoc, Timestamp, addDoc, serverTimestamp, getDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 
 interface DonationsListProps {
@@ -36,42 +36,25 @@ const DonationsList: React.FC<DonationsListProps> = ({ donations }) => {
 
     const handleSendMessage = async () => {
         if (!user || !messageModalDonation || !newMessage.trim()) return;
-
+    
         setIsSending(true);
-
+    
         const chatId = [user.uid, messageModalDonation.donatorId].sort().join('_') + `_${messageModalDonation.id}`;
-        
+    
         try {
-            // Check if chat already exists
-            const chatQuery = query(
-                collection(db, "message"), 
-                where("itemId", "==", messageModalDonation.id),
-                where("participants", "array-contains", user.uid)
-            );
-            const querySnapshot = await getDocs(chatQuery);
-            
-            let finalChatId = chatId;
-            let chatExists = false;
-
-            if (!querySnapshot.empty) {
-                 const existingChat = querySnapshot.docs.find(doc => {
-                    const participants = doc.data().participants;
-                    return participants.includes(messageModalDonation.donatorId);
-                });
-                if (existingChat) {
-                    finalChatId = existingChat.id;
-                    chatExists = true;
-                }
-            } 
-            
-            if (!chatExists) {
-                 // Chat does not exist, create it
-                const chatDocRef = doc(db, 'message', finalChatId);
+            const chatDocRef = doc(db, 'message', chatId);
+            const chatDoc = await getDoc(chatDocRef);
+    
+            if (!chatDoc.exists()) {
+                // Chat doesn't exist, create it with all required fields
+                const donatorInfo = await getDoc(doc(db, "users", messageModalDonation.donatorId));
+                const donatorName = donatorInfo.data()?.displayName || 'Anonymous';
+    
                 await setDoc(chatDocRef, {
                     participants: [user.uid, messageModalDonation.donatorId].sort(),
                     participantNames: {
                         [user.uid]: user.displayName || 'Anonymous',
-                        [messageModalDonation.donatorId]: messageModalDonation.ownerName || 'Anonymous',
+                        [messageModalDonation.donatorId]: donatorName,
                     },
                     itemId: messageModalDonation.id,
                     itemName: messageModalDonation.title,
@@ -79,18 +62,17 @@ const DonationsList: React.FC<DonationsListProps> = ({ donations }) => {
                     lastMessage: null,
                 });
             }
-
+    
             // Add the new message to the subcollection
-            const messagesColRef = collection(db, 'message', finalChatId, 'messages');
+            const messagesColRef = collection(db, 'message', chatId, 'messages');
             await addDoc(messagesColRef, {
                 text: newMessage,
                 senderId: user.uid,
                 receiverId: messageModalDonation.donatorId,
                 timestamp: serverTimestamp(),
             });
-
+    
             // Update lastMessage on the conversation
-            const chatDocRef = doc(db, 'message', finalChatId);
             await setDoc(chatDocRef, {
                 lastMessage: {
                     text: newMessage,
@@ -98,13 +80,13 @@ const DonationsList: React.FC<DonationsListProps> = ({ donations }) => {
                     timestamp: serverTimestamp()
                 }
             }, { merge: true });
-
+    
             // Navigate to chat page
-            router.push(`/messages/${finalChatId}`);
-
+            router.push(`/messages/${chatId}?message=${encodeURIComponent(newMessage)}`);
+    
         } catch (error) {
-            console.error("Error creating or finding chat:", error);
-            alert("Could not start a conversation. Please try again.");
+            console.error("Error creating or sending message:", error);
+            alert("Could not start a conversation. Please check your connection and security rules, then try again.");
         } finally {
             setIsSending(false);
             setMessageModalDonation(null);
