@@ -8,7 +8,7 @@ export interface Item {
     status: 'available' | 'claimed';
     imageUrl?: string;
     createdAt?: { seconds: number };
-    ownerId: string;
+    donatorId: string;
     ownerName?: string;
     claimedBy?: string | null;
 }
@@ -35,7 +35,7 @@ export interface Message {
   text: string;
   senderId: string;
   receiverId: string;
-  timestamp: { seconds: number };
+  timestamp: any;
 }
 
 export interface Conversation {
@@ -47,9 +47,9 @@ export interface Conversation {
   lastMessage?: {
     text: string;
     senderId: string;
-    timestamp: { seconds: number };
+    timestamp: any;
   };
-  createdAt: { seconds: number };
+  createdAt: any;
 }
 
 export type Donation = Item;

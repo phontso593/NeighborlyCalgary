@@ -2,11 +2,11 @@
 'use client';
 import {useState} from "react";
 import Image from "next/image";
-import type { Item as Donation } from "@/types";
+import type { Donation } from "@/types";
 import { Tag, HeartHandshake, CalendarDays, MessageSquare, X } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
-import { collection, query, where, getDocs, doc, setDoc, Timestamp } from "firebase/firestore";
+import { collection, query, where, getDocs, doc, setDoc, Timestamp, addDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 
 interface DonationsListProps {
@@ -27,7 +27,7 @@ const DonationsList: React.FC<DonationsListProps> = ({ donations }) => {
             router.push('/login');
             return;
         }
-        if (user.uid === donation.ownerId) {
+        if (user.uid === donation.donatorId) {
             alert("You cannot message yourself about your own item.");
             return;
         }
@@ -39,46 +39,68 @@ const DonationsList: React.FC<DonationsListProps> = ({ donations }) => {
 
         setIsSending(true);
 
-        const chatId = [user.uid, messageModalDonation.ownerId].sort().join('_') + `_${messageModalDonation.id}`;
-        const chatDocRef = doc(db, 'chats', chatId);
-
+        const chatId = [user.uid, messageModalDonation.donatorId].sort().join('_') + `_${messageModalDonation.id}`;
+        
         try {
             // Check if chat already exists
             const chatQuery = query(
-                collection(db, "chats"), 
+                collection(db, "message"), 
                 where("itemId", "==", messageModalDonation.id),
                 where("participants", "array-contains", user.uid)
             );
             const querySnapshot = await getDocs(chatQuery);
             
             let finalChatId = chatId;
+            let chatExists = false;
 
             if (!querySnapshot.empty) {
-                // Chat exists, find the correct one
                  const existingChat = querySnapshot.docs.find(doc => {
                     const participants = doc.data().participants;
-                    return participants.includes(messageModalDonation.ownerId);
+                    return participants.includes(messageModalDonation.donatorId);
                 });
                 if (existingChat) {
                     finalChatId = existingChat.id;
+                    chatExists = true;
                 }
-            } else {
+            } 
+            
+            if (!chatExists) {
                  // Chat does not exist, create it
+                const chatDocRef = doc(db, 'message', finalChatId);
                 await setDoc(chatDocRef, {
-                    participants: [user.uid, messageModalDonation.ownerId].sort(),
+                    participants: [user.uid, messageModalDonation.donatorId].sort(),
                     participantNames: {
                         [user.uid]: user.displayName || 'Anonymous',
-                        [messageModalDonation.ownerId]: messageModalDonation.ownerName || 'Anonymous',
+                        [messageModalDonation.donatorId]: messageModalDonation.ownerName || 'Anonymous',
                     },
                     itemId: messageModalDonation.id,
                     itemName: messageModalDonation.title,
-                    createdAt: Timestamp.now(),
+                    createdAt: serverTimestamp(),
                     lastMessage: null,
                 });
             }
-            
+
+            // Add the new message to the subcollection
+            const messagesColRef = collection(db, 'message', finalChatId, 'messages');
+            await addDoc(messagesColRef, {
+                text: newMessage,
+                senderId: user.uid,
+                receiverId: messageModalDonation.donatorId,
+                timestamp: serverTimestamp(),
+            });
+
+            // Update lastMessage on the conversation
+            const chatDocRef = doc(db, 'message', finalChatId);
+            await setDoc(chatDocRef, {
+                lastMessage: {
+                    text: newMessage,
+                    senderId: user.uid,
+                    timestamp: serverTimestamp()
+                }
+            }, { merge: true });
+
             // Navigate to chat page
-            router.push(`/messages/${finalChatId}?message=${encodeURIComponent(newMessage)}`);
+            router.push(`/messages/${finalChatId}`);
 
         } catch (error) {
             console.error("Error creating or finding chat:", error);

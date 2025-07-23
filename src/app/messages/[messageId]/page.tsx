@@ -30,7 +30,7 @@ const ChatPage = ({ params }: { params: { messageId: string } }) => {
   useEffect(() => {
     if (user && chatId) {
       // Fetch conversation details
-      const convoDocRef = doc(db, 'chats', chatId);
+      const convoDocRef = doc(db, 'message', chatId);
       const unsubConvo = onSnapshot(convoDocRef, (docSnap) => {
         if (docSnap.exists()) {
           const convoData = { id: docSnap.id, ...docSnap.data() } as Conversation;
@@ -46,7 +46,7 @@ const ChatPage = ({ params }: { params: { messageId: string } }) => {
 
 
       // Listen for messages
-      const messagesColRef = collection(db, 'chats', chatId, 'messages');
+      const messagesColRef = collection(db, 'message', chatId, 'messages');
       const q = query(messagesColRef, orderBy('timestamp', 'asc'));
 
       const unsubMessages = onSnapshot(q, (snapshot) => {
@@ -83,15 +83,15 @@ const ChatPage = ({ params }: { params: { messageId: string } }) => {
         text: newMessage,
         senderId: user.uid,
         receiverId: otherParticipantId,
-        timestamp: Timestamp.now(),
+        timestamp: serverTimestamp(),
       };
 
     try {
       // Add new message to subcollection
-      await addDoc(collection(db, 'chats', chatId, 'messages'), messageData);
+      await addDoc(collection(db, 'message', chatId, 'messages'), messageData);
 
       // Update the lastMessage on the parent chat document
-      const chatDocRef = doc(db, 'chats', chatId);
+      const chatDocRef = doc(db, 'message', chatId);
       await updateDoc(chatDocRef, {
         lastMessage: {
             text: newMessage,

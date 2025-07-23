@@ -1,7 +1,5 @@
 {
-  "/donate/page": "app/donate/page.js",
   "/page": "app/page.js",
-  "/contact/page": "app/contact/page.js",
-  "/about/page": "app/about/page.js",
-  "/browse/page": "app/browse/page.js"
+  "/profile/page": "app/profile/page.js",
+  "/donations/page": "app/donations/page.js"
 }

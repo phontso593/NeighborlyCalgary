@@ -16,7 +16,7 @@ const MessagesPage = () => {
   useEffect(() => {
     if (user) {
       const q = query(
-        collection(db, 'chats'),
+        collection(db, 'message'),
         where('participants', 'array-contains', user.uid),
         orderBy('lastMessage.timestamp', 'desc')
       );
@@ -24,6 +24,9 @@ const MessagesPage = () => {
       const unsubscribe = onSnapshot(q, (snapshot) => {
         const convos = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Conversation));
         setConversations(convos);
+        setIsLoadingConversations(false);
+      }, (error) => {
+        console.error("Error fetching conversations:", error)
         setIsLoadingConversations(false);
       });
 
@@ -61,6 +64,11 @@ const MessagesPage = () => {
     };
   };
 
+  const formatDate = (timestamp: any) => {
+    if (!timestamp || !timestamp.seconds) return '';
+    return new Date(timestamp.seconds * 1000).toLocaleDateString();
+  }
+
   return (
     <div className="max-w-4xl mx-auto my-10 p-4 sm:p-6 lg:p-8">
       <div className="text-center mb-12">
@@ -90,7 +98,7 @@ const MessagesPage = () => {
                         <div className="flex justify-between items-center">
                           <p className="text-md font-bold text-blue-700 truncate">{otherParticipant.name}</p>
                           <p className="text-xs text-gray-400">
-                            {convo.lastMessage?.timestamp ? new Date(convo.lastMessage.timestamp.seconds * 1000).toLocaleDateString() : ''}
+                            {formatDate(convo.lastMessage?.timestamp)}
                           </p>
                         </div>
                         <p className="text-sm text-gray-600 truncate mt-1">
