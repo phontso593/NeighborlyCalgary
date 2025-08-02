@@ -1,13 +1,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { 
-    getAuth, 
-    onAuthStateChanged, 
-    signInAnonymously,
-    signInWithCustomToken 
-} from 'firebase/auth';
-import { 
-    getFirestore, 
     collection, 
     addDoc, 
     query, 
@@ -15,10 +8,9 @@ import {
     onSnapshot,
     serverTimestamp,
     doc,
-    getDoc,
     setDoc
 } from 'firebase/firestore';
-import app, { db } from '@/lib/firebase';
+import { db } from '@/lib/firebase';
 import { useAuth } from '@/hooks/useAuth';
 
 // --- Helper Functions & Constants ---
@@ -70,7 +62,6 @@ const ChatApp = ({ donationId, receiverId }: { donationId: string, receiverId: s
         setIsLoading(true);
         setError(null);
 
-        const chatParticipants = [currentUser.uid, receiverId].sort();
         const chatId = [currentUser.uid, receiverId].sort().join('_') + `_${donationId}`;
         const messagesRef = collection(db, 'message', chatId, 'messages');
         const q = query(messagesRef, orderBy('timestamp', 'asc'));
@@ -148,7 +139,7 @@ const ChatApp = ({ donationId, receiverId }: { donationId: string, receiverId: s
                         <div className="text-center h-full flex flex-col items-center justify-center">
                             <h3 className="text-xl font-semibold text-gray-700 mb-2">Start the Conversation</h3>
                             <p className="text-gray-500 mb-6">Not sure what to say? Try one of these starters.</p>
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full max-w-lg">
+                            <div className="flex flex-wrap justify-center gap-4 w-full max-w-lg">
                                 {CHAT_STARTERS.map((starter, index) => (
                                     <button
                                         key={index}
