@@ -8,7 +8,8 @@ import {
     onSnapshot,
     serverTimestamp,
     doc,
-    setDoc
+    setDoc,
+    getDoc
 } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { useAuth } from '@/hooks/useAuth';
@@ -62,7 +63,7 @@ const ChatApp = ({ donationId, receiverId }: { donationId: string, receiverId: s
         setIsLoading(true);
         setError(null);
 
-        const chatId = [currentUser.uid, receiverId].sort().join('_') + `_${donationId}`;
+        const chatId = [currentUser.uid, receiverId].sort().join('_');
         const messagesRef = collection(db, 'message', chatId, 'messages');
         const q = query(messagesRef, orderBy('timestamp', 'asc'));
 
@@ -90,10 +91,30 @@ const ChatApp = ({ donationId, receiverId }: { donationId: string, receiverId: s
     const sendMessage = async (text: string) => {
         if (text.trim() === '' || !currentUser) return;
         
-        const chatId = [currentUser.uid, receiverId].sort().join('_') + `_${donationId}`;
+        const chatId = [currentUser.uid, receiverId].sort().join('_');
         const messagesRef = collection(db, 'message', chatId, 'messages');
+        const chatDocRef = doc(db, 'message', chatId);
 
         try {
+            // Check if chat document exists, if not create it
+            const chatDoc = await getDoc(chatDocRef);
+            if (!chatDoc.exists()) {
+                const receiverDoc = await getDoc(doc(db, "users", receiverId));
+                const receiverName = receiverDoc.data()?.displayName || 'Anonymous';
+                
+                await setDoc(chatDocRef, {
+                    participants: [currentUser.uid, receiverId].sort(),
+                    participantNames: {
+                        [currentUser.uid]: currentUser.displayName || 'Anonymous',
+                        [receiverId]: receiverName,
+                    },
+                    itemId: donationId, // This might not be perfect for a general chat, but it's a start
+                    itemName: "Item from donation", // A more generic name might be needed
+                    createdAt: serverTimestamp(),
+                });
+            }
+
+
             await addDoc(messagesRef, {
                 text: text,
                 senderId: currentUser.uid,
@@ -101,7 +122,6 @@ const ChatApp = ({ donationId, receiverId }: { donationId: string, receiverId: s
                 timestamp: serverTimestamp(),
             });
 
-            const chatDocRef = doc(db, 'message', chatId);
             await setDoc(chatDocRef, {
                 lastMessage: {
                     text: text,
@@ -139,12 +159,12 @@ const ChatApp = ({ donationId, receiverId }: { donationId: string, receiverId: s
                         <div className="text-center h-full flex flex-col items-center justify-center">
                             <h3 className="text-xl font-semibold text-gray-700 mb-2">Start the Conversation</h3>
                             <p className="text-gray-500 mb-6">Not sure what to say? Try one of these starters.</p>
-                            <div className="flex flex-wrap justify-center gap-4 w-full max-w-lg">
+                            <div className="flex flex-wrap justify-center gap-2">
                                 {CHAT_STARTERS.map((starter, index) => (
                                     <button
                                         key={index}
                                         onClick={() => sendMessage(starter)}
-                                        className="p-4 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-400 transition text-gray-800 shadow-sm"
+                                        className="px-4 py-2 bg-white border border-gray-300 rounded-full hover:bg-gray-100 hover:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-400 transition text-gray-800 shadow-sm"
                                     >
                                         {starter}
                                     </button>
