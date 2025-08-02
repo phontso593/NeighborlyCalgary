@@ -63,8 +63,8 @@ const ChatApp = ({ donationId, receiverId }: { donationId: string, receiverId: s
         setIsLoading(true);
         setError(null);
 
-        const chatId = [currentUser.uid, receiverId].sort().join('_');
-        const messagesRef = collection(db, 'message', chatId, 'messages');
+        const chatId = [currentUser.uid, receiverId].sort().join('_')  + `_${donationId}`;
+        const messagesRef = collection(db, 'chats', chatId, 'messages');
         const q = query(messagesRef, orderBy('timestamp', 'asc'));
 
         const unsubscribe = onSnapshot(q, (querySnapshot) => {
@@ -91,9 +91,9 @@ const ChatApp = ({ donationId, receiverId }: { donationId: string, receiverId: s
     const sendMessage = async (text: string) => {
         if (text.trim() === '' || !currentUser) return;
         
-        const chatId = [currentUser.uid, receiverId].sort().join('_');
-        const messagesRef = collection(db, 'message', chatId, 'messages');
-        const chatDocRef = doc(db, 'message', chatId);
+        const chatId = [currentUser.uid, receiverId].sort().join('_')  + `_${donationId}`;
+        const messagesRef = collection(db, 'chats', chatId, 'messages');
+        const chatDocRef = doc(db, 'chats', chatId);
 
         try {
             // Check if chat document exists, if not create it
@@ -101,6 +101,9 @@ const ChatApp = ({ donationId, receiverId }: { donationId: string, receiverId: s
             if (!chatDoc.exists()) {
                 const receiverDoc = await getDoc(doc(db, "users", receiverId));
                 const receiverName = receiverDoc.data()?.displayName || 'Anonymous';
+
+                const donationDoc = await getDoc(doc(db, "donations", donationId));
+                const donationTitle = donationDoc.data()?.title || 'Item';
                 
                 await setDoc(chatDocRef, {
                     participants: [currentUser.uid, receiverId].sort(),
@@ -108,8 +111,8 @@ const ChatApp = ({ donationId, receiverId }: { donationId: string, receiverId: s
                         [currentUser.uid]: currentUser.displayName || 'Anonymous',
                         [receiverId]: receiverName,
                     },
-                    itemId: donationId, // This might not be perfect for a general chat, but it's a start
-                    itemName: "Item from donation", // A more generic name might be needed
+                    itemId: donationId, 
+                    itemName: donationTitle,
                     createdAt: serverTimestamp(),
                 });
             }

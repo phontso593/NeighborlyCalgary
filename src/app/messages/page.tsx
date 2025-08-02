@@ -16,7 +16,7 @@ const MessagesPage = () => {
   useEffect(() => {
     if (user) {
       const q = query(
-        collection(db, 'message'),
+        collection(db, 'chats'),
         where('participants', 'array-contains', user.uid),
         orderBy('lastMessage.timestamp', 'desc')
       );

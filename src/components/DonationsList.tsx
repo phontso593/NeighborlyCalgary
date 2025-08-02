@@ -16,10 +16,7 @@ interface DonationsListProps {
 
 const DonationsList: React.FC<DonationsListProps> = ({ donations }) => {
     const [selectedDonation, setSelectedDonation] = useState<Donation | null>(null);
-    const [messageModalDonation, setMessageModalDonation] = useState<Donation | null>(null);
     const [chatDonation, setChatDonation] = useState<Donation | null>(null);
-    const [newMessage, setNewMessage] = useState('');
-    const [isSending, setIsSending] = useState(false);
     
     const { user } = useAuth();
     const router = useRouter();
@@ -34,66 +31,6 @@ const DonationsList: React.FC<DonationsListProps> = ({ donations }) => {
             return;
         }
         setChatDonation(donation);
-    };
-
-    const handleSendMessage = async () => {
-        if (!user || !messageModalDonation || !newMessage.trim()) return;
-    
-        setIsSending(true);
-    
-        const chatId = [user.uid, messageModalDonation.donatorId].sort().join('_') + `_${messageModalDonation.id}`;
-    
-        try {
-            const chatDocRef = doc(db, 'message', chatId);
-            const chatDoc = await getDoc(chatDocRef);
-    
-            if (!chatDoc.exists()) {
-                // Chat doesn't exist, create it with all required fields
-                const donatorInfo = await getDoc(doc(db, "users", messageModalDonation.donatorId));
-                const donatorName = donatorInfo.data()?.displayName || 'Anonymous';
-    
-                await setDoc(chatDocRef, {
-                    participants: [user.uid, messageModalDonation.donatorId].sort(),
-                    participantNames: {
-                        [user.uid]: user.displayName || 'Anonymous',
-                        [messageModalDonation.donatorId]: donatorName,
-                    },
-                    itemId: messageModalDonation.id,
-                    itemName: messageModalDonation.title,
-                    createdAt: serverTimestamp(),
-                    lastMessage: null,
-                });
-            }
-    
-            // Add the new message to the subcollection
-            const messagesColRef = collection(db, 'message', chatId, 'messages');
-            await addDoc(messagesColRef, {
-                text: newMessage,
-                senderId: user.uid,
-                receiverId: messageModalDonation.donatorId,
-                timestamp: serverTimestamp(),
-            });
-    
-            // Update lastMessage on the conversation
-            await setDoc(chatDocRef, {
-                lastMessage: {
-                    text: newMessage,
-                    senderId: user.uid,
-                    timestamp: serverTimestamp()
-                }
-            }, { merge: true });
-    
-            // Navigate to chat page
-            router.push(`/messages/${chatId}?message=${encodeURIComponent(newMessage)}`);
-    
-        } catch (error) {
-            console.error("Error creating or sending message:", error);
-            alert("Could not start a conversation. Please check your connection and security rules, then try again.");
-        } finally {
-            setIsSending(false);
-            setMessageModalDonation(null);
-            setNewMessage('');
-        }
     };
     
     const suggestedMessages = [
