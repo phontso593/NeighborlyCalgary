@@ -148,7 +148,11 @@ const DonationsList: React.FC<DonationsListProps> = ({ donations }) => {
                             </button>
                         </header>
                         <div className="flex-grow overflow-hidden">
-                            <ChatApp donationId={chatDonation.id} receiverId={chatDonation.donatorId} />
+                            <ChatApp 
+                              donationId={chatDonation.id} 
+                              receiverId={chatDonation.donatorId} 
+                              receiverName={chatDonation.ownerName || 'Donor'}
+                            />
                         </div>
                     </div>
                 </div>

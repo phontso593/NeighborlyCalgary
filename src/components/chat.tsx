@@ -14,15 +14,11 @@ import {
 import { db } from '@/lib/firebase';
 import { useAuth } from '@/hooks/useAuth';
 
-// --- Helper Functions & Constants ---
 const CHAT_STARTERS = [
     "Is this still available?",
     "I'm interested in this item.",
     "Can I arrange a pickup?",
 ];
-
-
-// --- React Components ---
 
 const Message = ({ message, currentUserId }: { message: any, currentUserId: string | null }) => {
     const { text, senderId, timestamp } = message;
@@ -40,8 +36,7 @@ const Message = ({ message, currentUserId }: { message: any, currentUserId: stri
     );
 };
 
-const ChatApp = ({ donationId, receiverId }: { donationId: string, receiverId: string }) => {
-    // --- State Management ---
+const ChatApp = ({ donationId, receiverId, receiverName }: { donationId: string, receiverId: string, receiverName: string }) => {
     const { user: currentUser, loading: authLoading } = useAuth();
     const [messages, setMessages] = useState<any[]>([]);
     const [newMessage, setNewMessage] = useState('');
@@ -49,8 +44,6 @@ const ChatApp = ({ donationId, receiverId }: { donationId: string, receiverId: s
     const [error, setError] = useState<string | null>(null);
     const messagesEndRef = useRef<HTMLDivElement>(null);
     
-    // --- Effects ---
-
     useEffect(() => {
         if (authLoading || !currentUser || !donationId || !receiverId) {
             setIsLoading(false);
@@ -61,18 +54,13 @@ const ChatApp = ({ donationId, receiverId }: { donationId: string, receiverId: s
         const chatDocRef = doc(db, 'chats', chatId);
         const messagesRef = collection(db, 'chats', chatId, 'messages');
     
-        // An async function to set up the chat and listener
-        const setupChat = async () => {
+        const setupChatAndListener = async () => {
             try {
                 setIsLoading(true);
                 setError(null);
     
-                // Step 1: Check if the chat document exists. If not, create it.
                 const chatDocSnap = await getDoc(chatDocRef);
                 if (!chatDocSnap.exists()) {
-                    // We need info from other collections to create the chat doc
-                    const receiverDoc = await getDoc(doc(db, "users", receiverId));
-                    const receiverName = receiverDoc.data()?.displayName || 'Anonymous';
                     const donationDoc = await getDoc(doc(db, "donations", donationId));
                     const donationTitle = donationDoc.data()?.title || 'Item';
     
@@ -85,11 +73,10 @@ const ChatApp = ({ donationId, receiverId }: { donationId: string, receiverId: s
                         itemId: donationId,
                         itemName: donationTitle,
                         createdAt: serverTimestamp(),
-                        lastMessage: null // No last message yet
+                        lastMessage: null
                     });
                 }
     
-                // Step 2: Now that the chat doc is guaranteed to exist, set up the listener.
                 const q = query(messagesRef, orderBy('timestamp', 'asc'));
                 const unsubscribe = onSnapshot(q, (querySnapshot) => {
                     const msgs = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
@@ -101,38 +88,33 @@ const ChatApp = ({ donationId, receiverId }: { donationId: string, receiverId: s
                     setIsLoading(false);
                 });
     
-                // Return the cleanup function for the listener
                 return unsubscribe;
     
             } catch (err) {
                 console.error("Error setting up chat:", err);
                 setError("Could not initialize chat.");
                 setIsLoading(false);
+                return undefined;
             }
         };
         
-        // Call the async setup function and store the returned unsubscribe function
         let unsubscribe: (() => void) | undefined;
-        setupChat().then(unsub => {
+        setupChatAndListener().then(unsub => {
             if (unsub) {
                 unsubscribe = unsub;
             }
         });
     
-        // Cleanup on component unmount
         return () => {
             if (unsubscribe) {
                 unsubscribe();
             }
         };
-    }, [currentUser, donationId, receiverId, authLoading]);
+    }, [currentUser, donationId, receiverId, receiverName, authLoading]);
 
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [messages]);
-
-    
-    // --- Event Handlers ---
 
     const sendMessage = async (text: string) => {
         if (text.trim() === '' || !currentUser) return;
@@ -142,7 +124,6 @@ const ChatApp = ({ donationId, receiverId }: { donationId: string, receiverId: s
         const chatDocRef = doc(db, 'chats', chatId);
     
         try {
-            // Add the new message to the 'messages' subcollection
             await addDoc(messagesRef, {
                 text: text,
                 senderId: currentUser.uid,
@@ -150,7 +131,6 @@ const ChatApp = ({ donationId, receiverId }: { donationId: string, receiverId: s
                 timestamp: serverTimestamp(),
             });
     
-            // Update the 'lastMessage' field on the parent chat document
             await setDoc(chatDocRef, {
                 lastMessage: {
                     text: text,
@@ -170,8 +150,6 @@ const ChatApp = ({ donationId, receiverId }: { donationId: string, receiverId: s
         e.preventDefault();
         sendMessage(newMessage);
     };
-
-    // --- Render Logic ---
 
     if (authLoading) {
         return <div className="flex items-center justify-center h-full bg-gray-100"><p>Authenticating...</p></div>;
@@ -209,7 +187,6 @@ const ChatApp = ({ donationId, receiverId }: { donationId: string, receiverId: s
 
             <footer className="bg-white border-t border-gray-200 p-4">
                 <div className="max-w-4xl mx-auto">
-                    {/* Message Input Form */}
                     <form onSubmit={handleSendMessage} className="flex items-center">
                         <input
                             type="text" value={newMessage} onChange={(e) => setNewMessage(e.target.value)}
