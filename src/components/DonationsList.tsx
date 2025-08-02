@@ -8,6 +8,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
 import { collection, query, where, getDocs, doc, setDoc, Timestamp, addDoc, serverTimestamp, getDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
+import ChatApp from "./chat";
 
 interface DonationsListProps {
     donations: Donation[];
@@ -16,6 +17,7 @@ interface DonationsListProps {
 const DonationsList: React.FC<DonationsListProps> = ({ donations }) => {
     const [selectedDonation, setSelectedDonation] = useState<Donation | null>(null);
     const [messageModalDonation, setMessageModalDonation] = useState<Donation | null>(null);
+    const [chatDonation, setChatDonation] = useState<Donation | null>(null);
     const [newMessage, setNewMessage] = useState('');
     const [isSending, setIsSending] = useState(false);
     
@@ -31,7 +33,7 @@ const DonationsList: React.FC<DonationsListProps> = ({ donations }) => {
             alert("You cannot message yourself about your own item.");
             return;
         }
-        setMessageModalDonation(donation);
+        setChatDonation(donation);
     };
 
     const handleSendMessage = async () => {
@@ -198,49 +200,19 @@ const DonationsList: React.FC<DonationsListProps> = ({ donations }) => {
                 </div>
             )}
 
-            {/* Message Modal */}
-            {messageModalDonation && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50" onClick={() => setMessageModalDonation(null)}>
-                    <div className="bg-white rounded-lg shadow-xl p-0 max-w-md w-full relative" onClick={(e) => e.stopPropagation()}>
-                        <header className="flex items-center justify-between p-4 border-b">
-                            <h2 className="text-xl font-bold">Message {messageModalDonation.ownerName || 'Donor'}</h2>
-                            <button onClick={() => setMessageModalDonation(null)} className="text-gray-500 hover:text-gray-800">
+            {/* Chat Modal */}
+            {chatDonation && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+                    <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full h-[80vh] flex flex-col">
+                         <header className="flex items-center justify-between p-4 border-b">
+                            <h2 className="text-xl font-bold">Chat about: {chatDonation.title}</h2>
+                            <button onClick={() => setChatDonation(null)} className="text-gray-500 hover:text-gray-800">
                                 <X size={24} />
                             </button>
                         </header>
-                        <div className="p-4">
-                            <div className="flex items-center gap-4 mb-4">
-                                <Image src={messageModalDonation.imageUrl || `https://placehold.co/600x400.png`} alt={messageModalDonation.title} width={64} height={64} className="rounded-md object-cover" />
-                                <div>
-                                    <h3 className="font-semibold">{messageModalDonation.title}</h3>
-                                </div>
-                            </div>
-                            <div className="space-y-2 mb-4">
-                                {suggestedMessages.map((msg, index) => (
-                                    <button key={index} onClick={() => setNewMessage(msg)} className="w-full text-left p-2 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors">
-                                        {msg}
-                                    </button>
-                                ))}
-                            </div>
-                            
-                            <textarea
-                                value={newMessage}
-                                onChange={(e) => setNewMessage(e.target.value)}
-                                placeholder="Select a message or type your own..."
-                                className="w-full p-2 border border-gray-300 rounded-md min-h-[100px] focus:ring-blue-500 focus:border-blue-500"
-                            />
-                            <p className="text-xs text-gray-500 mt-2">Don't share your email, phone number or financial information.</p>
+                        <div className="flex-grow overflow-hidden">
+                            <ChatApp donationId={chatDonation.id} receiverId={chatDonation.donatorId} />
                         </div>
-
-                        <footer className="flex justify-end gap-3 p-4 bg-gray-50 border-t">
-                            <button onClick={() => setMessageModalDonation(null)} className="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 font-semibold">
-                                Cancel
-                            </button>
-                            <button onClick={handleSendMessage} disabled={isSending || !newMessage.trim()} className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 font-semibold disabled:bg-blue-300 disabled:cursor-not-allowed flex items-center gap-2">
-                                <MessageSquare size={16} />
-                                {isSending ? 'Sending...' : 'Send message'}
-                            </button>
-                        </footer>
                     </div>
                 </div>
             )}
@@ -249,5 +221,3 @@ const DonationsList: React.FC<DonationsListProps> = ({ donations }) => {
 }
 
 export default DonationsList;
-
-    
