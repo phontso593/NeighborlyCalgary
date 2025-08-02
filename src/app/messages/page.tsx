@@ -1,7 +1,6 @@
-
 'use client';
 import React, { useEffect, useState } from 'react';
-import { collection, query, where, onSnapshot, orderBy } from 'firebase/firestore';
+import { collection, query, where, onSnapshot } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { useAuth } from '@/hooks/useAuth';
 import Link from 'next/link';
@@ -17,12 +16,19 @@ const MessagesPage = () => {
     if (user) {
       const q = query(
         collection(db, 'chats'),
-        where('participants', 'array-contains', user.uid),
-        orderBy('lastMessage.timestamp', 'desc')
+        where('participants', 'array-contains', user.uid)
       );
 
       const unsubscribe = onSnapshot(q, (snapshot) => {
         const convos = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Conversation));
+        
+        // Sort conversations by the most recent message on the client-side
+        convos.sort((a, b) => {
+          const timeA = a.lastMessage?.timestamp?.seconds || a.createdAt?.seconds || 0;
+          const timeB = b.lastMessage?.timestamp?.seconds || b.createdAt?.seconds || 0;
+          return timeB - timeA;
+        });
+
         setConversations(convos);
         setIsLoadingConversations(false);
       }, (error) => {
@@ -66,7 +72,18 @@ const MessagesPage = () => {
 
   const formatDate = (timestamp: any) => {
     if (!timestamp || !timestamp.seconds) return '';
-    return new Date(timestamp.seconds * 1000).toLocaleDateString();
+    const date = new Date(timestamp.seconds * 1000);
+    const today = new Date();
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+
+    if (date.toDateString() === today.toDateString()) {
+      return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    }
+    if (date.toDateString() === yesterday.toDateString()) {
+      return 'Yesterday';
+    }
+    return date.toLocaleDateString();
   }
 
   return (
@@ -91,22 +108,22 @@ const MessagesPage = () => {
                 <li key={convo.id}>
                   <Link href={`/messages/${convo.id}`} className="block p-6 hover:bg-gray-50 transition-colors">
                     <div className="flex items-start space-x-4">
-                      <div className="flex-shrink-0 bg-gray-200 p-2 rounded-full">
+                      <div className="flex-shrink-0 bg-gray-200 p-3 rounded-full">
                         <User size={24} className="text-gray-500" />
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex justify-between items-center">
                           <p className="text-md font-bold text-blue-700 truncate">{otherParticipant.name}</p>
-                          <p className="text-xs text-gray-400">
+                          <p className="text-xs text-gray-500 whitespace-nowrap">
                             {formatDate(convo.lastMessage?.timestamp)}
                           </p>
                         </div>
-                        <p className="text-sm text-gray-600 truncate mt-1">
+                         <p className="text-sm text-gray-600 mt-1">
+                           <span className="font-medium text-gray-900">Regarding: {convo.itemName}</span>
+                         </p>
+                        <p className="text-sm text-gray-500 truncate mt-2">
                           <span className="font-medium">{convo.lastMessage?.senderId === user.uid ? 'You: ' : ''}</span>
                           {convo.lastMessage?.text || 'No messages yet.'}
-                        </p>
-                        <p className="text-xs text-gray-400 mt-2 italic">
-                          Regarding: {convo.itemName}
                         </p>
                       </div>
                     </div>
