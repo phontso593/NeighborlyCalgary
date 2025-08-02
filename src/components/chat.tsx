@@ -52,33 +52,79 @@ const ChatApp = ({ donationId, receiverId }: { donationId: string, receiverId: s
     // --- Effects ---
 
     useEffect(() => {
-        if (authLoading) {
-            return;
-        }
-        if (!currentUser || !donationId || !receiverId) {
+        if (authLoading || !currentUser || !donationId || !receiverId) {
             setIsLoading(false);
             return;
         }
-
-        setIsLoading(true);
-        setError(null);
-
-        const chatId = [currentUser.uid, receiverId].sort().join('_')  + `_${donationId}`;
+    
+        const chatId = [currentUser.uid, receiverId].sort().join('_') + `_${donationId}`;
+        const chatDocRef = doc(db, 'chats', chatId);
         const messagesRef = collection(db, 'chats', chatId, 'messages');
-        const q = query(messagesRef, orderBy('timestamp', 'asc'));
-
-        const unsubscribe = onSnapshot(q, (querySnapshot) => {
-            const msgs = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-            setMessages(msgs);
-            setIsLoading(false);
-
-        }, (err) => {
-            console.error("Error listening to messages:", err);
-            setError("Failed to load messages.");
-            setIsLoading(false);
+    
+        // An async function to set up the chat and listener
+        const setupChat = async () => {
+            try {
+                setIsLoading(true);
+                setError(null);
+    
+                // Step 1: Check if the chat document exists. If not, create it.
+                const chatDocSnap = await getDoc(chatDocRef);
+                if (!chatDocSnap.exists()) {
+                    // We need info from other collections to create the chat doc
+                    const receiverDoc = await getDoc(doc(db, "users", receiverId));
+                    const receiverName = receiverDoc.data()?.displayName || 'Anonymous';
+                    const donationDoc = await getDoc(doc(db, "donations", donationId));
+                    const donationTitle = donationDoc.data()?.title || 'Item';
+    
+                    await setDoc(chatDocRef, {
+                        participants: [currentUser.uid, receiverId].sort(),
+                        participantNames: {
+                            [currentUser.uid]: currentUser.displayName || 'Anonymous',
+                            [receiverId]: receiverName,
+                        },
+                        itemId: donationId,
+                        itemName: donationTitle,
+                        createdAt: serverTimestamp(),
+                        lastMessage: null // No last message yet
+                    });
+                }
+    
+                // Step 2: Now that the chat doc is guaranteed to exist, set up the listener.
+                const q = query(messagesRef, orderBy('timestamp', 'asc'));
+                const unsubscribe = onSnapshot(q, (querySnapshot) => {
+                    const msgs = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    setMessages(msgs);
+                    setIsLoading(false);
+                }, (err) => {
+                    console.error("Error listening to messages:", err);
+                    setError("Failed to load messages.");
+                    setIsLoading(false);
+                });
+    
+                // Return the cleanup function for the listener
+                return unsubscribe;
+    
+            } catch (err) {
+                console.error("Error setting up chat:", err);
+                setError("Could not initialize chat.");
+                setIsLoading(false);
+            }
+        };
+        
+        // Call the async setup function and store the returned unsubscribe function
+        let unsubscribe: (() => void) | undefined;
+        setupChat().then(unsub => {
+            if (unsub) {
+                unsubscribe = unsub;
+            }
         });
-
-        return () => unsubscribe();
+    
+        // Cleanup on component unmount
+        return () => {
+            if (unsubscribe) {
+                unsubscribe();
+            }
+        };
     }, [currentUser, donationId, receiverId, authLoading]);
 
     useEffect(() => {
@@ -90,41 +136,21 @@ const ChatApp = ({ donationId, receiverId }: { donationId: string, receiverId: s
 
     const sendMessage = async (text: string) => {
         if (text.trim() === '' || !currentUser) return;
-        
-        const chatId = [currentUser.uid, receiverId].sort().join('_')  + `_${donationId}`;
+    
+        const chatId = [currentUser.uid, receiverId].sort().join('_') + `_${donationId}`;
         const messagesRef = collection(db, 'chats', chatId, 'messages');
         const chatDocRef = doc(db, 'chats', chatId);
-
+    
         try {
-            // Check if chat document exists, if not create it
-            const chatDoc = await getDoc(chatDocRef);
-            if (!chatDoc.exists()) {
-                const receiverDoc = await getDoc(doc(db, "users", receiverId));
-                const receiverName = receiverDoc.data()?.displayName || 'Anonymous';
-
-                const donationDoc = await getDoc(doc(db, "donations", donationId));
-                const donationTitle = donationDoc.data()?.title || 'Item';
-                
-                await setDoc(chatDocRef, {
-                    participants: [currentUser.uid, receiverId].sort(),
-                    participantNames: {
-                        [currentUser.uid]: currentUser.displayName || 'Anonymous',
-                        [receiverId]: receiverName,
-                    },
-                    itemId: donationId, 
-                    itemName: donationTitle,
-                    createdAt: serverTimestamp(),
-                });
-            }
-
-
+            // Add the new message to the 'messages' subcollection
             await addDoc(messagesRef, {
                 text: text,
                 senderId: currentUser.uid,
                 receiverId: receiverId,
                 timestamp: serverTimestamp(),
             });
-
+    
+            // Update the 'lastMessage' field on the parent chat document
             await setDoc(chatDocRef, {
                 lastMessage: {
                     text: text,
@@ -132,7 +158,7 @@ const ChatApp = ({ donationId, receiverId }: { donationId: string, receiverId: s
                     timestamp: serverTimestamp()
                 }
             }, { merge: true });
-
+    
             setNewMessage('');
         } catch (err) {
             console.error("Error sending message:", err);
