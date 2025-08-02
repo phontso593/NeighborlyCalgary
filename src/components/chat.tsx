@@ -1,5 +1,5 @@
+
 import React, { useState, useEffect, useRef } from 'react';
-import { initializeApp } from 'firebase/app';
 import { 
     getAuth, 
     onAuthStateChanged, 
@@ -18,33 +18,10 @@ import {
     getDoc,
     setDoc
 } from 'firebase/firestore';
-
-// --- Firebase Configuration ---
-const firebaseConfig = {
-    apiKey: "AIzaSyBPwUQdGDovmI5WZjiPzBTfpXk4wnS83Mc",
-    authDomain: "neighborlycalgary.firebaseapp.com",
-    projectId: "neighborlycalgary",
-    storageBucket: "neighborlycalgary.firebasestorage.app",
-    messagingSenderId: "1045114625371",
-    appId: "1:1045114625371:web:974f887ca67ceb96034e7e",
-    measurementId: "G-6V4EK3B14H"
-  };
-
-// --- Firebase Initialization ---
-// Check if app is already initialized
-let app;
-try {
-    app = initializeApp(firebaseConfig);
-} catch (e) {
-    app = initializeApp(firebaseConfig, "chat_app_" + Math.random());
-}
-
-const auth = getAuth(app);
-const db = getFirestore(app);
+import app, { db } from '@/lib/firebase';
+import { useAuth } from '@/hooks/useAuth';
 
 // --- Helper Functions & Constants ---
-const APP_ID = 'neighborlycalgary';
-const API_KEY = ""; // This will be handled by the environment.
 const CHAT_STARTERS = [
     "Is this still available?",
     "I'm interested in this item.",
@@ -52,22 +29,9 @@ const CHAT_STARTERS = [
 ];
 
 
-const getDonationDetails = async (donationId) => {
-    if(!donationId) return null;
-    const donationRef = doc(db, 'donations', donationId);
-    const docSnap = await getDoc(donationRef);
-
-    if (docSnap.exists()) {
-        return { id: docSnap.id, ...docSnap.data() };
-    } else {
-        console.warn(`Donation ${donationId} not found.`);
-        return null;
-    }
-};
-
 // --- React Components ---
 
-const Message = ({ message, currentUserId }) => {
+const Message = ({ message, currentUserId }: { message: any, currentUserId: string | null }) => {
     const { text, senderId, timestamp } = message;
     const isSender = senderId === currentUserId;
     const messageClass = isSender ? 'bg-blue-500 text-white self-end' : 'bg-gray-200 text-gray-800 self-start';
@@ -83,39 +47,22 @@ const Message = ({ message, currentUserId }) => {
     );
 };
 
-interface ChatAppProps {
-    donationId: string;
-    receiverId: string;
-}
-
-
-const ChatApp: React.FC<ChatAppProps> = ({ donationId, receiverId }) => {
+const ChatApp = ({ donationId, receiverId }: { donationId: string, receiverId: string }) => {
     // --- State Management ---
-    const [currentUser, setCurrentUser] = useState(null);
-    const [currentChat, setCurrentChat] = useState({ donationId, receiverId });
-    const [messages, setMessages] = useState([]);
+    const { user: currentUser, loading: authLoading } = useAuth();
+    const [messages, setMessages] = useState<any[]>([]);
     const [newMessage, setNewMessage] = useState('');
-    const [donationInfo, setDonationInfo] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const messagesEndRef = useRef(null);
-
-
+    const [error, setError] = useState<string | null>(null);
+    const messagesEndRef = useRef<HTMLDivElement>(null);
+    
     // --- Effects ---
 
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                setCurrentUser(user);
-            } else {
-                 setError("You must be logged in to chat.");
-            }
-        });
-        return () => unsubscribe();
-    }, []);
-
-    useEffect(() => {
-        if (!currentUser || !currentChat.donationId) {
+        if (authLoading) {
+            return;
+        }
+        if (!currentUser || !donationId || !receiverId) {
             setIsLoading(false);
             return;
         }
@@ -123,21 +70,12 @@ const ChatApp: React.FC<ChatAppProps> = ({ donationId, receiverId }) => {
         setIsLoading(true);
         setError(null);
 
-        getDonationDetails(currentChat.donationId)
-            .then(data => {
-                if (data) setDonationInfo(data);
-                else setError(`Donation with ID ${currentChat.donationId} not found.`);
-            })
-            .catch(err => {
-                console.error("Error fetching donation:", err);
-                setError("Failed to fetch donation details.");
-            });
-
-        const chatId = [currentUser.uid, currentChat.receiverId].sort().join('_') + `_${currentChat.donationId}`;
+        const chatParticipants = [currentUser.uid, receiverId].sort();
+        const chatId = [currentUser.uid, receiverId].sort().join('_') + `_${donationId}`;
         const messagesRef = collection(db, 'message', chatId, 'messages');
         const q = query(messagesRef, orderBy('timestamp', 'asc'));
 
-        const unsubscribe = onSnapshot(q, async (querySnapshot) => {
+        const unsubscribe = onSnapshot(q, (querySnapshot) => {
             const msgs = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
             setMessages(msgs);
             setIsLoading(false);
@@ -149,50 +87,31 @@ const ChatApp: React.FC<ChatAppProps> = ({ donationId, receiverId }) => {
         });
 
         return () => unsubscribe();
-    }, [currentUser, currentChat]);
+    }, [currentUser, donationId, receiverId, authLoading]);
 
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [messages]);
 
-
+    
     // --- Event Handlers ---
 
-    const sendMessage = async (text) => {
+    const sendMessage = async (text: string) => {
         if (text.trim() === '' || !currentUser) return;
-
-        const chatId = [currentUser.uid, currentChat.receiverId].sort().join('_') + `_${currentChat.donationId}`;
+        
+        const chatId = [currentUser.uid, receiverId].sort().join('_') + `_${donationId}`;
         const messagesRef = collection(db, 'message', chatId, 'messages');
-        const chatDocRef = doc(db, 'message', chatId);
 
         try {
             await addDoc(messagesRef, {
                 text: text,
                 senderId: currentUser.uid,
-                receiverId: currentChat.receiverId,
+                receiverId: receiverId,
                 timestamp: serverTimestamp(),
             });
 
-            const chatDoc = await getDoc(chatDocRef);
-            const donatorInfo = await getDoc(doc(db, "users", currentChat.receiverId));
-            const donatorName = donatorInfo.data()?.displayName || 'Anonymous';
-
-
-            if (!chatDoc.exists()) {
-                await setDoc(chatDocRef, {
-                    participants: [currentUser.uid, currentChat.receiverId].sort(),
-                     participantNames: {
-                        [currentUser.uid]: currentUser.displayName || 'Anonymous',
-                        [currentChat.receiverId]: donatorName,
-                    },
-                    itemId: currentChat.donationId,
-                    itemName: donationInfo?.title || "Item",
-                    createdAt: serverTimestamp(),
-                    lastMessage: null,
-                });
-            }
-
-             await setDoc(chatDocRef, {
+            const chatDocRef = doc(db, 'message', chatId);
+            await setDoc(chatDocRef, {
                 lastMessage: {
                     text: text,
                     senderId: currentUser.uid,
@@ -207,22 +126,22 @@ const ChatApp: React.FC<ChatAppProps> = ({ donationId, receiverId }) => {
         }
     };
     
-    const handleSendMessage = (e) => {
+    const handleSendMessage = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         sendMessage(newMessage);
     };
 
     // --- Render Logic ---
 
-    if (!currentUser) {
+    if (authLoading) {
         return <div className="flex items-center justify-center h-full bg-gray-100"><p>Authenticating...</p></div>;
     }
     
     return (
         <div className="flex flex-col h-full bg-gray-50 font-sans">
-             <main className="flex-1 overflow-y-auto p-4 md:p-6 flex flex-col">
+            <main className="flex-1 overflow-y-auto p-4 md:p-6 flex flex-col">
                 <div className="max-w-4xl mx-auto w-full flex-1">
-                    {isLoading && <p className="text-center text-gray-500">Loading messages...</p>}
+                    {isLoading && <div className="flex justify-center items-center h-full"><p className="text-center text-gray-500">Loading chat...</p></div>}
                     {error && <p className="text-center text-red-500 bg-red-100 p-3 rounded-md">{error}</p>}
                     
                     {!isLoading && !error && messages.length === 0 && (
@@ -243,7 +162,7 @@ const ChatApp: React.FC<ChatAppProps> = ({ donationId, receiverId }) => {
                         </div>
                     )}
 
-                    {messages.map(msg => <Message key={msg.id} message={msg} currentUserId={currentUser.uid} />)}
+                    {messages.map(msg => <Message key={msg.id} message={msg} currentUserId={currentUser?.uid || null} />)}
                     <div ref={messagesEndRef} />
                 </div>
             </main>
