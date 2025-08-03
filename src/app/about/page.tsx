@@ -27,9 +27,9 @@ const AboutPage = () => {
     <div className="bg-white text-blue-700 font-sans">
       <div className="max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
         
-        <div className="mb-12">
-          <h1 className="text-4xl font-bold tracking-tight text-blue-800">About Us</h1>
-          <p className="mt-4 text-lg text-blue-600">
+        <div className="mb-12 text-center">
+          <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-blue-800">About Us</h1>
+          <p className="mt-4 text-lg text-blue-600 max-w-3xl mx-auto">
             Neighbourly is a non-profit organization dedicated to fostering positive change and empowering communities through collaborative initiatives. Our mission is to create a more equitable and sustainable world by addressing critical social and environmental challenges.
           </p>
         </div>
@@ -60,11 +60,11 @@ const AboutPage = () => {
         </div>
 
         <div className="mb-12">
-          <h2 className="text-3xl font-bold text-blue-800">Our Team</h2>
-          <p className="mt-4 text-base text-blue-600">
+          <h2 className="text-3xl font-bold text-blue-800 text-center">Our Team</h2>
+          <p className="mt-4 text-base text-blue-600 text-center max-w-3xl mx-auto">
             Our team is composed of passionate and dedicated individuals who bring a wealth of experience and expertise to our work. We are united by a shared commitment to making a difference and creating a better future for all. Our diverse backgrounds and skills enable us to approach challenges from multiple perspectives and develop innovative solutions.
           </p>
-          <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 text-center">
+          <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 text-center">
             <div className="flex flex-col items-center">
               <Image 
                 src="https://placehold.co/200x200.png"
@@ -129,19 +129,19 @@ const AboutPage = () => {
         </div>
         
         <div className="mb-12">
-          <h2 className="text-3xl font-bold text-blue-800">Our Values</h2>
+          <h2 className="text-3xl font-bold text-blue-800 text-center">Our Values</h2>
           <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="flex flex-col p-6 rounded-lg border border-blue-200 bg-blue-50 shadow-sm">
+            <div className="flex flex-col items-center text-center p-6 rounded-lg border border-blue-200 bg-blue-50 shadow-sm">
               <div className="text-blue-600 mb-3"><CollaborationIcon /></div>
               <h3 className="text-lg font-bold text-blue-800">Collaboration</h3>
               <p className="mt-1 text-sm text-blue-600">We believe in the power of working together to achieve common goals.</p>
             </div>
-            <div className="flex flex-col p-6 rounded-lg border border-blue-200 bg-blue-50 shadow-sm">
+            <div className="flex flex-col items-center text-center p-6 rounded-lg border border-blue-200 bg-blue-50 shadow-sm">
               <div className="text-blue-600 mb-3"><IntegrityIcon /></div>
               <h3 className="text-lg font-bold text-blue-800">Integrity</h3>
               <p className="mt-1 text-sm text-blue-600">We are committed to transparency, accountability, and ethical conduct in all our actions.</p>
             </div>
-            <div className="flex flex-col p-6 rounded-lg border border-blue-200 bg-blue-50 shadow-sm">
+            <div className="flex flex-col items-center text-center p-6 rounded-lg border border-blue-200 bg-blue-50 shadow-sm">
               <div className="text-blue-600 mb-3"><SustainabilityIcon /></div>
               <h3 className="text-lg font-bold text-blue-800">Sustainability</h3>
               <p className="mt-1 text-sm text-blue-600">We strive to create solutions that are environmentally and socially responsible.</p>

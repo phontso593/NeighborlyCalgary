@@ -44,16 +44,15 @@ const SearchAndFilter: React.FC<SearchAndFilterProps> = ({
     };
     
     useEffect(() => {
-        // Initial load with all donations
-        onFilterChange(allDonations);
-    }, [allDonations, onFilterChange]);
+        applyFilters();
+    }, [search, category, condition, allDonations]);
 
 
     return (
-        <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-md border border-gray-200">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="max-w-4xl mx-auto p-4 sm:p-6 bg-white rounded-lg shadow-md border border-gray-200">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {/* Search Input */}
-                <div className="md:col-span-1">
+                <div className="sm:col-span-2 lg:col-span-1">
                     <label htmlFor="search" className="block text-sm font-medium text-gray-700 mb-1">
                         Search Donations
                     </label>
@@ -61,7 +60,7 @@ const SearchAndFilter: React.FC<SearchAndFilterProps> = ({
                         <input
                             type="text"
                             id="search"
-                            placeholder="e.g., Winter coats, children's books..."
+                            placeholder="e.g., Winter coats..."
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
                             className="w-full p-2 pl-4 pr-10 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
@@ -105,24 +104,16 @@ const SearchAndFilter: React.FC<SearchAndFilterProps> = ({
                 </div>
             </div>
             
-            <div className="flex justify-end items-center mt-4 gap-4 border-t pt-4">
+            <div className="flex flex-col sm:flex-row justify-end items-center mt-4 gap-4 border-t pt-4">
                 <button
                     onClick={clearFilters}
                     className="flex items-center text-sm font-medium text-gray-600 hover:text-gray-800"
                 >
                     <X size={16} className="mr-1" />
-                    Clear All Filters
+                    Clear Filters
                 </button>
                 <button
                     onClick={applyFilters}
-                    className="flex items-center justify-center px-4 py-2 bg-blue-600 text-white font-semibold rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                    className="w-full sm:w-auto flex items-center justify-center px-4 py-2 bg-blue-600 text-white font-semibold rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                 >
-                    <Filter size={16} className="mr-2" />
-                    Apply Filters
-                </button>
-            </div>
-        </div>
-    );
-};
-
-export default SearchAndFilter;
+                    <Filter size={16} className

@@ -72,7 +72,7 @@ const ContactPage = () => {
                 <Mail className="flex-shrink-0 h-6 w-6 text-orange-500 mr-4 mt-1" />
                 <div>
                   <h3 className="text-lg font-semibold text-gray-800">Email</h3>
-                  <a href="mailto:support@givinghub.example.com" className="text-blue-600 hover:underline">
+                  <a href="mailto:support@givinghub.example.com" className="text-blue-600 hover:underline break-all">
                     support@neighborly.ca
                   </a>
                 </div>

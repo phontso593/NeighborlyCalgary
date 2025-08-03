@@ -28,29 +28,29 @@ const LandingPage = () => {
               Join our community and make a difference by donating items or
               sharing your stories.
             </p>
-            <div className="flex flex-wrap gap-4">
+            <div className="flex flex-col sm:flex-row flex-wrap gap-4">
               <Link
                 href="/login"
-                className="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-6 rounded-md transition-colors duration-300"
+                className="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-6 rounded-md transition-colors duration-300 text-center"
               >
                 Login
               </Link>
               <Link
                 href="/register"
-                className="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-6 rounded-md transition-colors duration-300"
+                className="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-6 rounded-md transition-colors duration-300 text-center"
               >
                 Sign Up
               </Link>
               <Link
                 href="/browse"
-                className="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-6 rounded-md transition-colors duration-300"
+                className="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-6 rounded-md transition-colors duration-300 text-center"
               >
                 Continue as Guest
               </Link>
             </div>
           </div>
           {/* Right Side: Image */}
-          <div className="h-full hidden md:block">
+          <div className="h-64 md:h-full hidden md:block">
             <Image
               src={landingImage}
               alt="Community donation event"
@@ -124,7 +124,7 @@ const LandingPage = () => {
         </h2>
         <div className="bg-white rounded-lg shadow-lg overflow-hidden">
           <div className="grid md:grid-cols-2 items-center">
-            <div className="h-full">
+            <div className="h-64 md:h-full">
               <Image
                 src={successImage}
                 alt="A community success story"
