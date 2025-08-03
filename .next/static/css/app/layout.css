@@ -724,6 +724,9 @@ video {
 .ml-2 {
   margin-left: 0.5rem;
 }
+.ml-auto {
+  margin-left: auto;
+}
 .mr-1 {
   margin-right: 0.25rem;
 }
@@ -787,6 +790,9 @@ video {
 .h-16 {
   height: 4rem;
 }
+.h-2 {
+  height: 0.5rem;
+}
 .h-3\.5 {
   height: 0.875rem;
 }
@@ -838,6 +844,9 @@ video {
 .w-10 {
   width: 2.5rem;
 }
+.w-2 {
+  width: 0.5rem;
+}
 .w-24 {
   width: 6rem;
 }
@@ -846,6 +855,9 @@ video {
 }
 .w-4 {
   width: 1rem;
+}
+.w-56 {
+  width: 14rem;
 }
 .w-6 {
   width: 1.5rem;
@@ -1071,6 +1083,10 @@ video {
   --tw-border-opacity: 1;
   border-color: rgb(191 219 254 / var(--tw-border-opacity, 1));
 }
+.border-blue-400 {
+  --tw-border-opacity: 1;
+  border-color: rgb(96 165 250 / var(--tw-border-opacity, 1));
+}
 .border-destructive {
   border-color: hsl(var(--destructive));
 }
@@ -1085,15 +1101,15 @@ video {
   --tw-border-opacity: 1;
   border-color: rgb(209 213 219 / var(--tw-border-opacity, 1));
 }
+.border-gray-700 {
+  --tw-border-opacity: 1;
+  border-color: rgb(55 65 81 / var(--tw-border-opacity, 1));
+}
 .border-input {
   border-color: hsl(var(--input));
 }
 .border-transparent {
   border-color: transparent;
-}
-.border-gray-700 {
-  --tw-border-opacity: 1;
-  border-color: rgb(55 65 81 / var(--tw-border-opacity, 1));
 }
 .bg-\[\#0404e2\] {
   --tw-bg-opacity: 1;
@@ -1223,6 +1239,9 @@ video {
 .bg-opacity-95 {
   --tw-bg-opacity: 0.95;
 }
+.fill-current {
+  fill: currentColor;
+}
 .object-contain {
   -o-object-fit: contain;
      object-fit: contain;
@@ -1254,6 +1273,10 @@ video {
 }
 .p-8 {
   padding: 2rem;
+}
+.px-2 {
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
 }
 .px-3 {
   padding-left: 0.75rem;
@@ -1393,6 +1416,9 @@ video {
 .tracking-tight {
   letter-spacing: -0.025em;
 }
+.tracking-widest {
+  letter-spacing: 0.1em;
+}
 .text-blue-100 {
   --tw-text-opacity: 1;
   color: rgb(219 234 254 / var(--tw-text-opacity, 1));
@@ -1503,6 +1529,9 @@ video {
 }
 .opacity-50 {
   opacity: 0.5;
+}
+.opacity-60 {
+  opacity: 0.6;
 }
 .opacity-90 {
   opacity: 0.9;
@@ -2083,6 +2112,10 @@ code {
 .data-\[swipe\=move\]\:translate-x-\[var\(--radix-toast-swipe-move-x\)\][data-swipe="move"] {
   --tw-translate-x: var(--radix-toast-swipe-move-x);
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+
+.data-\[state\=open\]\:bg-accent[data-state="open"] {
+  background-color: hsl(var(--accent));
 }
 
 .data-\[disabled\]\:opacity-50[data-disabled] {
