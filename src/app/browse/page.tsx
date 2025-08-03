@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import type { Donation } from "@/types";
-import SearchAndFilter from '@/components/Search&Filter';
+import SearchAndFilter from '@/components/SearchAndFilter';
 import DonationsList from '@/components/DonationsList';
 
 const BrowsePage = () => {
