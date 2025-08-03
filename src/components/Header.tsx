@@ -4,116 +4,102 @@ import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import logo from '@/assets/whitePrancheta 12.png';
-import { LogOut, PackagePlus, Menu, X, MessageSquare } from 'lucide-react';
+import { LogOut, PackagePlus, Menu, X, LogIn } from 'lucide-react'; // Added LogIn
 import { useAuth } from "@/hooks/useAuth";
 import { getAuth, signOut } from "firebase/auth";
 import { useRouter } from "next/navigation";
 
+// 1. Centralized navigation links
+const navLinksConfig = [
+    { href: "/how-it-works", label: "How It Works", show: 'always' },
+    { href: "/browse", label: "Browse", show: 'always' },
+    { href: "/about", label: "About", show: 'always' },
+    { href: "/contact", label: "Contact", show: 'always' },
+    { href: "/profile", label: "Profile", show: 'loggedIn' },
+    { href: "/donate", label: "Donate", show: 'loggedIn', isButton: true, icon: <PackagePlus size={16} className="mr-2" />, className: "donate-btn", mobileClassName: "bg-sky-500" },
+    { href: "/login", label: "Login", show: 'loggedOut', isButton: true, icon: <LogIn size={16} className="mr-2" />, className: "login-btn", mobileClassName: "bg-green-500" },
+    { href: "/register", label: "Sign Up", show: 'loggedOut', isButton: true, icon: <PackagePlus size={16} className="mr-2" />, className: "signup-btn", mobileClassName: "bg-blue-700" },
+];
+
 const Header = () => {
-  const { user, loading } = useAuth();
-  const auth = getAuth();
-  const router = useRouter();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const { user, loading } = useAuth();
+    const auth = getAuth();
+    const router = useRouter();
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const handleLogout = async () => {
-    try {
-      await signOut(auth);
-      setIsMenuOpen(false);
-      router.push('/');
-    } catch (error) {
-      console.error("Failed to log out", error);
-      alert("Failed to log out. Please try again.");
-    }
-  };
+    const handleLogout = async () => {
+        try {
+            await signOut(auth);
+            setIsMenuOpen(false);
+            router.push('/');
+        } catch (error) {
+            console.error("Failed to log out", error);
+        }
+    };
 
-  const closeMenu = () => setIsMenuOpen(false);
+    const closeMenu = () => setIsMenuOpen(false);
 
-  const loggedInLinks = (
-    <>
-      <Link href="/how-it-works" className="nav-link" onClick={closeMenu}>How It Works</Link>
-      <Link href="/browse" className="nav-link" onClick={closeMenu}>Browse</Link>
-      <Link href="/about" className="nav-link" onClick={closeMenu}>About</Link>
-      <Link href="/contact" className="nav-link" onClick={closeMenu}>Contact</Link>
-      <Link href="/profile" className="nav-link" onClick={closeMenu}>Profile</Link>
-      <Link href="/donate" className="donate-btn" onClick={closeMenu}><PackagePlus size={16} className="mr-2" />Donate</Link>
-      <button onClick={handleLogout} className="logout-btn"><LogOut size={16} className="mr-1" />Logout</button>
-    </>
-  );
+    // 2. Simplified rendering logic based on auth state
+    const renderLinks = (isMobile = false) => {
+        const linksToRender = navLinksConfig.filter(link =>
+            link.show === 'always' ||
+            (user && link.show === 'loggedIn') ||
+            (!user && link.show === 'loggedOut')
+        );
 
-  const loggedOutLinks = (
-     <>
-      <Link href="/how-it-works" className="nav-link" onClick={closeMenu}>How It Works</Link>
-      <Link href="/browse" className="nav-link" onClick={closeMenu}>Browse</Link>
-      <Link href="/about" className="nav-link" onClick={closeMenu}>About</Link>
-      <Link href="/contact" className="nav-link" onClick={closeMenu}>Contact</Link>
-      <Link href="/login" className="login-btn" onClick={closeMenu}><LogOut size={16} className="mr-2" />Login</Link>
-      <Link href="/register" className="signup-btn" onClick={closeMenu}><PackagePlus size={16} className="mr-2" />Sign Up</Link>
-    </>
-  );
+        return linksToRender.map(link => {
+            let className = isMobile ? "mobile-nav-link" : "nav-link";
+            if (link.isButton) {
+                className = isMobile ? `${className} ${link.mobileClassName}` : link.className;
+            }
 
-  const mobileLoggedInLinks = (
-    <>
-      <Link href="/how-it-works" className="mobile-nav-link" onClick={closeMenu}>How It Works</Link>
-      <Link href="/browse" className="mobile-nav-link" onClick={closeMenu}>Browse</Link>
-      <Link href="/about" className="mobile-nav-link" onClick={closeMenu}>About</Link>
-      <Link href="/contact" className="mobile-nav-link" onClick={closeMenu}>Contact</Link>
-      <Link href="/profile" className="mobile-nav-link" onClick={closeMenu}>Profile</Link>
-      <Link href="/donate" className="mobile-nav-link bg-sky-500" onClick={closeMenu}>Donate</Link>
-      <button onClick={handleLogout} className="mobile-nav-link w-full text-left bg-red-500 mt-2">Logout</button>
-    </>
-  );
+            return (
+                <Link key={link.href} href={link.href} className={className} onClick={closeMenu}>
+                    {link.icon}{link.label}
+                </Link>
+            );
+        });
+    };
 
-  const mobileLoggedOutLinks = (
-    <>
-      <Link href="/how-it-works" className="mobile-nav-link" onClick={closeMenu}>How It Works</Link>
-      <Link href="/browse" className="mobile-nav-link" onClick={closeMenu}>Browse</Link>
-      <Link href="/about" className="mobile-nav-link" onClick={closeMenu}>About</Link>
-      <Link href="/contact" className="mobile-nav-link" onClick={closeMenu}>Contact</Link>
-      <Link href="/login" className="mobile-nav-link bg-green-500" onClick={closeMenu}>Login</Link>
-      <Link href="/register" className="mobile-nav-link bg-blue-700" onClick={closeMenu}>Sign Up</Link>
-    </>
-  );
+    return (
+        <header className="bg-[#0404e2] text-white p-4 flex justify-between items-center w-full shadow-md sticky top-0 z-50">
+            <Link href={user ? "/login-user" : "/"} className="flex items-center" onClick={closeMenu}>
+                <Image src={logo} alt="Neighborly Logo" width={50} height={50} className="h-12 w-auto" priority />
+            </Link>
 
-  return (
-    <header className="bg-[#0404e2] text-white p-4 flex justify-between items-center w-full shadow-md sticky top-0 z-50">
-      <Link href="/" className="flex items-center">
-        <Image src={logo} alt="Neighborly Logo" width={50} height={50} className="h-12 w-auto" />
-      </Link>
-      
-      {/* Desktop Navigation */}
-      <nav className="hidden md:flex items-center space-x-2">
-        {loading ? (
-          <div className="px-3 py-2 text-sm font-medium">Loading...</div>
-        ) : user ? (
-          loggedInLinks
-        ) : (
-          loggedOutLinks
-        )}
-      </nav>
+            {/* Desktop Navigation */}
+            <nav className="hidden md:flex items-center space-x-2">
+                {loading ? <div className="px-3 py-2 text-sm font-medium">Loading...</div> : renderLinks()}
+                {user && !loading && (
+                    <button onClick={handleLogout} className="logout-btn"><LogOut size={16} className="mr-1" />Logout</button>
+                )}
+            </nav>
 
-      {/* Mobile Menu Button */}
-      <div className="md:hidden">
-        <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="text-white focus:outline-none">
-          {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
-        </button>
-      </div>
+            {/* Mobile Menu Button */}
+            <div className="md:hidden">
+                <button
+                    onClick={() => setIsMenuOpen(!isMenuOpen)}
+                    className="text-white focus:outline-none"
+                    aria-controls="mobile-menu"
+                    aria-expanded={isMenuOpen} // 3. Accessibility improvement
+                >
+                    {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
+                </button>
+            </div>
 
-      {/* Mobile Navigation Menu */}
-      {isMenuOpen && (
-        <div className="md:hidden absolute top-full left-0 right-0 bg-[#0404e2] bg-opacity-95 p-4 shadow-lg">
-          <nav className="flex flex-col space-y-2">
-            {loading ? (
-              <div className="px-3 py-2 text-sm font-medium text-center">Loading...</div>
-            ) : user ? (
-              mobileLoggedInLinks
-            ) : (
-              mobileLoggedOutLinks
+            {/* Mobile Navigation Menu */}
+            {isMenuOpen && (
+                <div id="mobile-menu" className="md:hidden absolute top-full left-0 right-0 bg-[#0404e2] bg-opacity-95 p-4 shadow-lg">
+                    <nav className="flex flex-col space-y-2">
+                        {loading ? <div className="text-center">Loading...</div> : renderLinks(true)}
+                        {user && !loading && (
+                           <button onClick={handleLogout} className="mobile-nav-link w-full text-left bg-red-500 mt-2">Logout</button>
+                        )}
+                    </nav>
+                </div>
             )}
-          </nav>
-        </div>
-      )}
-    </header>
-  );
+        </header>
+    );
 };
 
 export default Header;
