@@ -1091,6 +1091,10 @@ video {
 .border-transparent {
   border-color: transparent;
 }
+.border-gray-700 {
+  --tw-border-opacity: 1;
+  border-color: rgb(55 65 81 / var(--tw-border-opacity, 1));
+}
 .bg-\[\#0404e2\] {
   --tw-bg-opacity: 1;
   background-color: rgb(4 4 226 / var(--tw-bg-opacity, 1));
@@ -1883,6 +1887,11 @@ code {
   color: rgb(31 41 55 / var(--tw-text-opacity, 1));
 }
 
+.hover\:text-white:hover {
+  --tw-text-opacity: 1;
+  color: rgb(255 255 255 / var(--tw-text-opacity, 1));
+}
+
 .hover\:underline:hover {
   text-decoration-line: underline;
 }
@@ -2234,6 +2243,10 @@ code {
 
   .md\:grid-cols-3 {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .md\:grid-cols-4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 
   .md\:p-12 {
