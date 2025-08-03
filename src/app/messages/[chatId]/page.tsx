@@ -37,7 +37,7 @@ const ConversationPage = () => {
         const chatDocSnap = await getDoc(chatDocRef);
 
         if (chatDocSnap.exists()) {
-          const convoData = chatDocSnap.data() as Conversation;
+          const convoData = chatDocSnap.data() as Omit<Conversation, 'id'>;
           // Ensure the current user is part of this conversation
           if (convoData.participants.includes(user.uid)) {
             setConversation({ id: chatDocSnap.id, ...convoData });

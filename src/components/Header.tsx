@@ -55,14 +55,26 @@ const Header = () => {
         return linksToRender.map(link => {
             let className = isMobile ? "mobile-nav-link" : "nav-link";
             if (link.isButton) {
-                className = isMobile ? `${className} ${link.mobileClassName}` : link.className;
+                // For desktop, we don't render these buttons here anymore, but leaving logic for mobile
+                className = isMobile ? `${' '}${link.mobileClassName}` : link.className;
+            }
+             if (isMobile) {
+              return (
+                <Link key={link.href} href={link.href} className={className} onClick={closeMenu}>
+                    <span className="flex items-center">{link.icon}{link.label}</span>
+                </Link>
+              )
             }
 
-            return (
-                <Link key={link.href} href={link.href} className={className} onClick={closeMenu}>
-                    {link.icon}{link.label}
-                </Link>
-            );
+             // Render non-button links for desktop
+            if(!link.isButton){
+                return (
+                    <Link key={link.href} href={link.href} className={className}>
+                       {link.label}
+                    </Link>
+                );
+            }
+            return null;
         });
     };
 
@@ -77,58 +89,113 @@ const Header = () => {
                 <Image src={logo} alt="Neighborly Logo" width={50} height={50} className="h-12 w-auto" priority />
             </Link>
 
-            {/* Desktop Navigation */}
-            <nav className="hidden md:flex items-center space-x-2">
-                {loading ? (
-                  <div className="px-3 py-2 text-sm font-medium">Loading...</div>
-                ) : (
-                  <>
-                    {renderLinks()}
-                    {user && (
-                      <DropdownMenu>
+            {/* Combined Desktop Navigation and Profile */}
+            <div className="hidden md:flex items-center space-x-4">
+                 <nav className="flex items-center space-x-2">
+                     {renderLinks()}
+                 </nav>
+                
+                {!loading && (
+                    <>
+                        {user ? (
+                             <>
+                                <Link href="/donate" className="donate-btn">
+                                    <PackagePlus size={16} className="mr-2" />Donate
+                                </Link>
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                        <Button variant="outline" className="rounded-full w-10 h-10 bg-blue-500 text-white border-blue-400 hover:bg-blue-600">
+                                            {getInitials(user.displayName)}
+                                        </Button>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent className="w-56 mr-2">
+                                        <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                                        <DropdownMenuSeparator />
+                                        <DropdownMenuItem onClick={() => router.push('/profile')}>
+                                            <User className="mr-2 h-4 w-4" />
+                                            <span>Profile</span>
+                                        </DropdownMenuItem>
+                                        <DropdownMenuItem onClick={() => router.push('/donations')}>
+                                            <Box className="mr-2 h-4 w-4" />
+                                            <span>My Donations</span>
+                                        </DropdownMenuItem>
+                                        <DropdownMenuItem onClick={() => router.push('/requested')}>
+                                            <Heart className="mr-2 h-4 w-4" />
+                                            <span>My Requests</span>
+                                        </DropdownMenuItem>
+                                        <DropdownMenuItem onClick={() => router.push('/messages')}>
+                                            <MessageSquare className="mr-2 h-4 w-4" />
+                                            <span>Messages</span>
+                                        </DropdownMenuItem>
+                                        <DropdownMenuItem onClick={() => router.push('/about')}>
+                                            <User className="mr-2 h-4 w-4" />
+                                            <span>About</span>
+                                        </DropdownMenuItem>
+                                        <DropdownMenuSeparator />
+                                        <DropdownMenuItem onClick={handleLogout}>
+                                            <LogOut className="mr-2 h-4 w-4" />
+                                            <span>Log out</span>
+                                        </DropdownMenuItem>
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
+                             </>
+                        ) : (
+                           <div className="flex items-center space-x-2">
+                               <Link href="/login" className="login-btn">
+                                  <LogIn size={16} className="mr-2" /> Login
+                               </Link>
+                               <Link href="/register" className="signup-btn">
+                                  <PackagePlus size={16} className="mr-2" /> Sign Up
+                               </Link>
+                           </div>
+                        )}
+                    </>
+                )}
+            </div>
+
+            {/* Mobile Area */}
+            <div className="flex items-center space-x-2 md:hidden">
+                 {/* Profile Icon visible on mobile */}
+                {!loading && user && (
+                    <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <Button variant="outline" className="rounded-full w-10 h-10 bg-blue-500 text-white border-blue-400 hover:bg-blue-600">
-                            {getInitials(user.displayName)}
-                          </Button>
+                            <Button variant="outline" className="rounded-full w-10 h-10 bg-blue-500 text-white border-blue-400 hover:bg-blue-600">
+                                {getInitials(user.displayName)}
+                            </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent className="w-56 mr-2">
-                          <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                          <DropdownMenuSeparator />
-                          <DropdownMenuItem onClick={() => router.push('/profile')}>
-                            <User className="mr-2 h-4 w-4" />
-                            <span>Profile</span>
-                          </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => router.push('/donations')}>
-                            <Box className="mr-2 h-4 w-4" />
-                            <span>My Donations</span>
-                          </DropdownMenuItem>
-                           <DropdownMenuItem onClick={() => router.push('/requested')}>
-                            <Heart className="mr-2 h-4 w-4" />
-                            <span>My Requests</span>
-                          </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => router.push('/messages')}>
-                            <MessageSquare className="mr-2 h-4 w-4" />
-                            <span>Messages</span>
-                          </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => router.push('/about')}>
-                            <User className="mr-2 h-4 w-4" />
-                            <span>About</span>
-                          </DropdownMenuItem>
-                          <DropdownMenuSeparator />
-                          <DropdownMenuItem onClick={handleLogout}>
-                            <LogOut className="mr-2 h-4 w-4" />
-                            <span>Log out</span>
-                          </DropdownMenuItem>
+                            <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                            <DropdownMenuSeparator />
+                             <DropdownMenuItem onClick={() => router.push('/profile')}>
+                                <User className="mr-2 h-4 w-4" />
+                                <span>Profile</span>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => router.push('/donations')}>
+                                <Box className="mr-2 h-4 w-4" />
+                                <span>My Donations</span>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => router.push('/requested')}>
+                                <Heart className="mr-2 h-4 w-4" />
+                                <span>My Requests</span>
+                            </DropdownMenuItem>
+                             <DropdownMenuItem onClick={() => router.push('/messages')}>
+                                <MessageSquare className="mr-2 h-4 w-4" />
+                                <span>Messages</span>
+                            </DropdownMenuItem>
+                             <DropdownMenuItem onClick={() => router.push('/about')}>
+                                <User className="mr-2 h-4 w-4" />
+                                <span>About</span>
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem onClick={handleLogout}>
+                                <LogOut className="mr-2 h-4 w-4" />
+                                <span>Log out</span>
+                            </DropdownMenuItem>
                         </DropdownMenuContent>
-                      </DropdownMenu>
-                    )}
-                  </>
+                    </DropdownMenu>
                 )}
-            </nav>
-
-
-            {/* Mobile Menu Button */}
-            <div className="md:hidden">
+                
+                {/* Mobile Menu Button */}
                 <button
                     onClick={() => setIsMenuOpen(!isMenuOpen)}
                     className="text-white focus:outline-none"
@@ -143,10 +210,7 @@ const Header = () => {
             {isMenuOpen && (
                 <div id="mobile-menu" className="md:hidden absolute top-full left-0 right-0 bg-[#0404e2] bg-opacity-95 p-4 shadow-lg">
                     <nav className="flex flex-col space-y-2">
-                        {loading ? <div className="text-center">Loading...</div> : renderLinks(true)}
-                        {user && !loading && (
-                           <button onClick={handleLogout} className="mobile-nav-link w-full text-left bg-red-500 mt-2">Logout</button>
-                        )}
+                        {renderLinks(true)}
                     </nav>
                 </div>
             )}
