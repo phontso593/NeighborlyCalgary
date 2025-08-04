@@ -9,7 +9,8 @@ import { useAuth } from '@/hooks/useAuth';
 import ChatApp from '@/components/chat';
 import Link from 'next/link';
 import { ArrowLeft, Loader2 } from 'lucide-react';
-import type { Conversation } from '@/types';
+import type { Conversation, Donation } from '@/types';
+import Image from 'next/image';
 
 const ConversationPage = () => {
   const params = useParams();
@@ -17,6 +18,7 @@ const ConversationPage = () => {
   const { user, loading: authLoading } = useAuth();
   
   const [conversation, setConversation] = useState<Conversation | null>(null);
+  const [itemImage, setItemImage] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   
@@ -37,10 +39,19 @@ const ConversationPage = () => {
         const chatDocSnap = await getDoc(chatDocRef);
 
         if (chatDocSnap.exists()) {
-          const convoData = chatDocSnap.data() as Omit<Conversation, 'id'>;
-          // Ensure the current user is part of this conversation
+          const convoData = { id: chatDocSnap.id, ...chatDocSnap.data() } as Conversation;
+
           if (convoData.participants.includes(user.uid)) {
-            setConversation({ id: chatDocSnap.id, ...convoData });
+            setConversation(convoData);
+            
+            // Fetch donation item to get the image
+            const itemDocRef = doc(db, 'donations', convoData.itemId);
+            const itemDocSnap = await getDoc(itemDocRef);
+            if(itemDocSnap.exists()) {
+              const itemData = itemDocSnap.data() as Donation;
+              setItemImage(itemData.imageUrl || null);
+            }
+
           } else {
             setError("You do not have permission to view this chat.");
           }
@@ -109,12 +120,21 @@ const ConversationPage = () => {
         <Link href="/messages" className="p-2 rounded-full hover:bg-gray-200 mr-4">
             <ArrowLeft size={24} className="text-gray-600" />
         </Link>
+        {itemImage && (
+            <Image 
+                src={itemImage} 
+                alt={conversation.itemName} 
+                width={40} 
+                height={40} 
+                className="w-10 h-10 object-cover rounded-md mr-4"
+            />
+        )}
         <div>
             <h1 className="text-xl font-bold text-gray-800">
-                Chat with {otherParticipant.name}
+                {conversation.itemName}
             </h1>
             <p className="text-sm text-gray-500">
-                Regarding: {conversation.itemName}
+                Chatting with {otherParticipant.name}
             </p>
         </div>
       </header>
