@@ -1,4 +1,3 @@
-
 'use client';
 import React, { useState } from "react";
 import Link from "next/link";
@@ -19,7 +18,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 const navLinksConfig = [
-    { href: "/contact", label: "Contact", show: 'always' },
     { href: "/donate", label: "Donate", show: 'loggedIn', isButton: true, icon: <PackagePlus size={16} className="mr-2" />, className: "donate-btn", mobileClassName: "bg-sky-500" },
     { href: "/login", label: "Login", show: 'loggedOut', isButton: true, icon: <LogIn size={16} className="mr-2" />, className: "login-btn", mobileClassName: "bg-green-500" },
     { href: "/register", label: "Sign Up", show: 'loggedOut', isButton: true, icon: <PackagePlus size={16} className="mr-2" />, className: "signup-btn", mobileClassName: "bg-blue-700" },
@@ -97,7 +95,7 @@ const Header = () => {
                     <>
                         {user ? (
                              <>
-                                <Link href="/donate" className="donate-btn">
+                                <Link href="/donate" className="donate-btn hidden md:flex">
                                     <PackagePlus size={16} className="mr-2" />Donate
                                 </Link>
                                 <DropdownMenu>
@@ -138,7 +136,7 @@ const Header = () => {
                                 </DropdownMenu>
                              </>
                         ) : (
-                           <div className="flex items-center space-x-2">
+                           <div className="hidden md:flex items-center space-x-2">
                                <Link href="/login" className="login-btn">
                                   <LogIn size={16} className="mr-2" /> Login
                                </Link>
