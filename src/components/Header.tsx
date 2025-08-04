@@ -19,8 +19,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 const navLinksConfig = [
-    { href: "/how-it-works", label: "How It Works", show: 'always' },
-    { href: "/browse", label: "Browse", show: 'always' },
     { href: "/contact", label: "Contact", show: 'always' },
     { href: "/donate", label: "Donate", show: 'loggedIn', isButton: true, icon: <PackagePlus size={16} className="mr-2" />, className: "donate-btn", mobileClassName: "bg-sky-500" },
     { href: "/login", label: "Login", show: 'loggedOut', isButton: true, icon: <LogIn size={16} className="mr-2" />, className: "login-btn", mobileClassName: "bg-green-500" },
@@ -90,8 +88,8 @@ const Header = () => {
             </Link>
 
             {/* Combined Desktop Navigation and Profile */}
-            <div className="hidden md:flex items-center space-x-4">
-                 <nav className="flex items-center space-x-2">
+            <div className="flex items-center space-x-4">
+                 <nav className="hidden md:flex items-center space-x-2">
                      {renderLinks()}
                  </nav>
                 
@@ -151,60 +149,17 @@ const Header = () => {
                         )}
                     </>
                 )}
-            </div>
-
-            {/* Mobile Area */}
-            <div className="flex items-center space-x-2 md:hidden">
-                 {/* Profile Icon visible on mobile */}
-                {!loading && user && (
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button variant="outline" className="rounded-full w-10 h-10 bg-blue-500 text-white border-blue-400 hover:bg-blue-600">
-                                {getInitials(user.displayName)}
-                            </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent className="w-56 mr-2">
-                            <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                            <DropdownMenuSeparator />
-                             <DropdownMenuItem onClick={() => router.push('/profile')}>
-                                <User className="mr-2 h-4 w-4" />
-                                <span>Profile</span>
-                            </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => router.push('/donations')}>
-                                <Box className="mr-2 h-4 w-4" />
-                                <span>My Donations</span>
-                            </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => router.push('/requested')}>
-                                <Heart className="mr-2 h-4 w-4" />
-                                <span>My Requests</span>
-                            </DropdownMenuItem>
-                             <DropdownMenuItem onClick={() => router.push('/messages')}>
-                                <MessageSquare className="mr-2 h-4 w-4" />
-                                <span>Messages</span>
-                            </DropdownMenuItem>
-                             <DropdownMenuItem onClick={() => router.push('/about')}>
-                                <User className="mr-2 h-4 w-4" />
-                                <span>About</span>
-                            </DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem onClick={handleLogout}>
-                                <LogOut className="mr-2 h-4 w-4" />
-                                <span>Log out</span>
-                            </DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
-                )}
-                
-                {/* Mobile Menu Button */}
+                 {/* Mobile Menu Button */}
                 <button
                     onClick={() => setIsMenuOpen(!isMenuOpen)}
-                    className="text-white focus:outline-none"
+                    className="md:hidden text-white focus:outline-none"
                     aria-controls="mobile-menu"
                     aria-expanded={isMenuOpen}
                 >
                     {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
                 </button>
             </div>
+
 
             {/* Mobile Navigation Menu */}
             {isMenuOpen && (

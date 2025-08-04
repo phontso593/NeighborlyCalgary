@@ -3,5 +3,8 @@
   "/profile/page": "app/profile/page.js",
   "/page": "app/page.js",
   "/login/page": "app/login/page.js",
-  "/contact/page": "app/contact/page.js"
+  "/contact/page": "app/contact/page.js",
+  "/request/page": "app/request/page.js",
+  "/how-it-works/page": "app/how-it-works/page.js",
+  "/donations/page": "app/donations/page.js"
 }

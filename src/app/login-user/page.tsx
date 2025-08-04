@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import Link from 'next/link';
 import Image from 'next/image';
-import { List, Mail, MessageSquare, PackagePlus } from 'lucide-react';
+import { HelpCircle, Search, MessageSquare, PackagePlus } from 'lucide-react';
 import { collection, query, where, onSnapshot, limit } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import type { Donation } from "@/types";
@@ -105,13 +105,13 @@ const LoginUserPage = () => {
         <div className="mt-16">
           <h2 className="text-2xl font-bold text-blue-800 mb-6">Quick Actions</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <Link href="/donations" className="flex items-center p-6 bg-white rounded-lg shadow-md border border-gray-200 hover:shadow-lg hover:border-blue-500 transition">
-              <List className="h-6 w-6 text-blue-600 mr-4" />
-              <span className="font-semibold text-gray-800">List Donations</span>
+            <Link href="/how-it-works" className="flex items-center p-6 bg-white rounded-lg shadow-md border border-gray-200 hover:shadow-lg hover:border-blue-500 transition">
+              <HelpCircle className="h-6 w-6 text-blue-600 mr-4" />
+              <span className="font-semibold text-gray-800">How It Works</span>
             </Link>
-            <Link href="/contact" className="flex items-center p-6 bg-white rounded-lg shadow-md border border-gray-200 hover:shadow-lg hover:border-blue-500 transition">
-              <Mail className="h-6 w-6 text-blue-600 mr-4" />
-              <span className="font-semibold text-gray-800">Contact Us</span>
+            <Link href="/browse" className="flex items-center p-6 bg-white rounded-lg shadow-md border border-gray-200 hover:shadow-lg hover:border-blue-500 transition">
+              <Search className="h-6 w-6 text-blue-600 mr-4" />
+              <span className="font-semibold text-gray-800">Browse</span>
             </Link>
             <Link href="/messages" className="flex items-center p-6 bg-white rounded-lg shadow-md border border-gray-200 hover:shadow-lg hover:border-blue-500 transition">
               <MessageSquare className="h-6 w-6 text-blue-600 mr-4" />
