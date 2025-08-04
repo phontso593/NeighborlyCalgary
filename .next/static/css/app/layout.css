@@ -769,6 +769,9 @@ video {
 .mb-10 {
   margin-bottom: 2.5rem;
 }
+.mt-6 {
+  margin-top: 1.5rem;
+}
 .block {
   display: block;
 }
@@ -1125,6 +1128,9 @@ video {
 }
 .border-t {
   border-top-width: 1px;
+}
+.border-dashed {
+  border-style: dashed;
 }
 .border-blue-200 {
   --tw-border-opacity: 1;
