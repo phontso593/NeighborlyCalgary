@@ -113,6 +113,7 @@ const DonateForm = () => {
         status: "available", // Set default status
         createdAt: Timestamp.now(),
         donatorId: user.uid, // Correct field name for security rules
+        ownerName: user.displayName || 'Anonymous',
       });
 
       toast({ title: "Success!", description: `Donated ${title}` });

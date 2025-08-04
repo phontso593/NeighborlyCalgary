@@ -1,6 +1,6 @@
 
 'use client';
-import {useState} from "react";
+import {useState, useEffect} from "react";
 import Image from "next/image";
 import type { Donation } from "@/types";
 import { Tag, HeartHandshake, CalendarDays, MessageSquare, X } from "lucide-react";
@@ -14,12 +14,39 @@ interface DonationsListProps {
     donations: Donation[];
 }
 
-const DonationsList: React.FC<DonationsListProps> = ({ donations }) => {
+const DonationsList: React.FC<DonationsListProps> = ({ donations: initialDonations }) => {
+    const [donations, setDonations] = useState<Donation[]>(initialDonations);
     const [selectedDonation, setSelectedDonation] = useState<Donation | null>(null);
     const [chatDonation, setChatDonation] = useState<Donation | null>(null);
     
     const { user } = useAuth();
     const router = useRouter();
+
+    useEffect(() => {
+        const fetchDonatorNames = async () => {
+            const donationsWithNames = await Promise.all(
+                initialDonations.map(async (donation) => {
+                    if (donation.ownerName) return donation;
+                    try {
+                        const userDoc = await getDoc(doc(db, 'users', donation.donatorId));
+                        if(userDoc.exists()){
+                            return { ...donation, ownerName: userDoc.data().displayName || 'Anonymous' };
+                        }
+                    } catch(e) {
+                        console.error("Could not fetch donator's name", e);
+                    }
+                    return { ...donation, ownerName: 'Anonymous' };
+                })
+            );
+            setDonations(donationsWithNames);
+        };
+        if(initialDonations.length > 0){
+            fetchDonatorNames();
+        } else {
+            setDonations([]);
+        }
+    }, [initialDonations]);
+
 
     const handleOpenMessageModal = (donation: Donation) => {
         if (!user) {

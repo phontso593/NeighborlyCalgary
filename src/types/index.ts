@@ -44,6 +44,7 @@ export interface Conversation {
   participantNames: { [key: string]: string };
   itemId: string;
   itemName: string;
+  itemImageUrl?: string;
   lastMessage?: {
     text: string;
     senderId: string;

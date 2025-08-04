@@ -62,19 +62,30 @@ const ChatApp = ({ donationId, receiverId, receiverName }: { donationId: string,
                 const chatDocSnap = await getDoc(chatDocRef);
                 if (!chatDocSnap.exists()) {
                     const donationDoc = await getDoc(doc(db, "donations", donationId));
-                    const donationTitle = donationDoc.data()?.title || 'Item';
-    
-                    await setDoc(chatDocRef, {
-                        participants: [currentUser.uid, receiverId].sort(),
-                        participantNames: {
-                            [currentUser.uid]: currentUser.displayName || 'Anonymous',
-                            [receiverId]: receiverName,
-                        },
-                        itemId: donationId,
-                        itemName: donationTitle,
-                        createdAt: serverTimestamp(),
-                        lastMessage: null
-                    });
+                    if(donationDoc.exists()){
+                        const donationData = donationDoc.data();
+                        const donationTitle = donationData?.title || 'Item';
+                        const donationImageUrl = donationData?.imageUrl || null;
+                        
+                        // We are passed receiverName, which should be the owner's name.
+                        // Let's ensure we use it correctly.
+                        const finalReceiverName = receiverName || donationData?.ownerName || 'Donor';
+        
+                        await setDoc(chatDocRef, {
+                            participants: [currentUser.uid, receiverId].sort(),
+                            participantNames: {
+                                [currentUser.uid]: currentUser.displayName || 'Anonymous',
+                                [receiverId]: finalReceiverName,
+                            },
+                            itemId: donationId,
+                            itemName: donationTitle,
+                            itemImageUrl: donationImageUrl, // This is the crucial part
+                            createdAt: serverTimestamp(),
+                            lastMessage: null
+                        });
+                    } else {
+                         throw new Error("Donation item not found.");
+                    }
                 }
     
                 const q = query(messagesRef, orderBy('timestamp', 'asc'));

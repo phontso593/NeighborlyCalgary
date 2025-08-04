@@ -1,11 +1,12 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import { collection, query, where, onSnapshot } from 'firebase/firestore';
+import { collection, query, where, onSnapshot, getDoc, doc, deleteDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { useAuth } from '@/hooks/useAuth';
 import Link from 'next/link';
 import { Conversation } from '@/types';
-import { User, MessageSquareText } from 'lucide-react';
+import { MessageSquareText, Trash2 } from 'lucide-react';
+import Image from 'next/image';
 
 const MessagesPage = () => {
   const { user, loading } = useAuth();
@@ -19,17 +20,29 @@ const MessagesPage = () => {
         where('participants', 'array-contains', user.uid)
       );
 
-      const unsubscribe = onSnapshot(q, (snapshot) => {
-        const convos = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Conversation));
+      const unsubscribe = onSnapshot(q, async (snapshot) => {
+        const convosWithoutImages = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Conversation));
+
+        const convosWithImages = await Promise.all(
+          convosWithoutImages.map(async (convo) => {
+            if (convo.itemId) {
+              const itemDocRef = doc(db, 'donations', convo.itemId);
+              const itemDocSnap = await getDoc(itemDocRef);
+              if (itemDocSnap.exists()) {
+                return { ...convo, itemImageUrl: itemDocSnap.data().imageUrl || null };
+              }
+            }
+            return { ...convo, itemImageUrl: null };
+          })
+        );
         
-        // Sort conversations by the most recent message on the client-side
-        convos.sort((a, b) => {
+        convosWithImages.sort((a, b) => {
           const timeA = a.lastMessage?.timestamp?.seconds || a.createdAt?.seconds || 0;
           const timeB = b.lastMessage?.timestamp?.seconds || b.createdAt?.seconds || 0;
           return timeB - timeA;
         });
 
-        setConversations(convos);
+        setConversations(convosWithImages);
         setIsLoadingConversations(false);
       }, (error) => {
         console.error("Error fetching conversations:", error)
@@ -41,6 +54,23 @@ const MessagesPage = () => {
       setIsLoadingConversations(false);
     }
   }, [user, loading]);
+
+  const handleDeleteConversation = async (e: React.MouseEvent, chatId: string) => {
+    e.preventDefault(); // Prevent the Link from navigating
+    e.stopPropagation(); // Stop event bubbling
+
+    if (window.confirm('Are you sure you want to delete this conversation? This cannot be undone.')) {
+        try {
+            const chatDocRef = doc(db, 'chats', chatId);
+            await deleteDoc(chatDocRef);
+            // The onSnapshot listener will automatically update the UI
+        } catch (error) {
+            console.error("Error deleting conversation: ", error);
+            alert("Failed to delete conversation. Please try again.");
+        }
+    }
+  };
+
 
   if (loading || isLoadingConversations) {
     return (
@@ -105,29 +135,42 @@ const MessagesPage = () => {
             {conversations.map(convo => {
               const otherParticipant = getOtherParticipant(convo);
               return (
-                <li key={convo.id}>
-                  <Link href={`/messages/${convo.id}`} className="block p-6 hover:bg-gray-50 transition-colors">
-                    <div className="flex items-start space-x-4">
-                      <div className="flex-shrink-0 bg-gray-200 p-3 rounded-full">
-                        <User size={24} className="text-gray-500" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex justify-between items-center">
-                          <p className="text-md font-bold text-blue-700 truncate">{otherParticipant.name}</p>
-                          <p className="text-xs text-gray-500 whitespace-nowrap">
-                            {formatDate(convo.lastMessage?.timestamp)}
+                <li key={convo.id} className="flex items-center justify-between p-6 hover:bg-gray-50 transition-colors group">
+                  <Link href={`/messages/${convo.id}`} className="flex-grow flex items-start space-x-4">
+                    <div className="flex-shrink-0">
+                      <Image
+                        src={convo.itemImageUrl || "https://placehold.co/60x60.png"}
+                        alt={convo.itemName}
+                        width={60}
+                        height={60}
+                        className="w-16 h-16 object-cover rounded-md bg-gray-200"
+                      />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex justify-between items-center">
+                        <div>
+                          <p className="text-sm text-gray-500">
+                              Chat with {otherParticipant.name}
                           </p>
+                          <p className="text-md font-bold text-blue-700 truncate">{convo.itemName}</p>
                         </div>
-                         <p className="text-sm text-gray-600 mt-1">
-                           <span className="font-medium text-gray-900">Regarding: {convo.itemName}</span>
-                         </p>
-                        <p className="text-sm text-gray-500 truncate mt-2">
-                          <span className="font-medium">{convo.lastMessage?.senderId === user.uid ? 'You: ' : ''}</span>
-                          {convo.lastMessage?.text || 'No messages yet.'}
+                        <p className="text-xs text-gray-500 whitespace-nowrap ml-2">
+                          {formatDate(convo.lastMessage?.timestamp)}
                         </p>
                       </div>
+                      <p className="text-sm text-gray-500 truncate mt-2">
+                        <span className="font-medium">{convo.lastMessage?.senderId === user.uid ? 'You: ' : ''}</span>
+                        {convo.lastMessage?.text || 'No messages yet.'}
+                      </p>
                     </div>
                   </Link>
+                  <button 
+                    onClick={(e) => handleDeleteConversation(e, convo.id)}
+                    className="ml-4 p-2 rounded-full text-gray-400 hover:bg-red-100 hover:text-red-600 opacity-0 group-hover:opacity-100 transition-opacity"
+                    aria-label="Delete conversation"
+                  >
+                    <Trash2 size={20} />
+                  </button>
                 </li>
               );
             })}
