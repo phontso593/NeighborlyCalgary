@@ -169,7 +169,7 @@ const DonationsList: React.FC<DonationsListProps> = ({ donations: initialDonatio
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
                     <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full h-[80vh] flex flex-col">
                          <header className="flex items-center justify-between p-4 border-b">
-                            <h2 className="text-xl font-bold">Chat about: {chatDonation.title}</h2>
+                            <h2 className="text-xl font-bold">Message Donor About: {chatDonation.title}</h2>
                             <button onClick={() => setChatDonation(null)} className="text-gray-500 hover:text-gray-800">
                                 <X size={24} />
                             </button>
