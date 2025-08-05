@@ -5,13 +5,15 @@ import { db } from '@/lib/firebase';
 import { useAuth } from '@/hooks/useAuth';
 import Link from 'next/link';
 import { Conversation } from '@/types';
-import { MessageSquareText, Trash2 } from 'lucide-react';
+import { MessageSquareText, Trash2, X } from 'lucide-react';
 import Image from 'next/image';
+import ChatApp from '@/components/chat';
 
 const MessagesPage = () => {
   const { user, loading } = useAuth();
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [isLoadingConversations, setIsLoadingConversations] = useState(true);
+  const [selectedConversation, setSelectedConversation] = useState<Conversation | null>(null);
 
   useEffect(() => {
     if (user) {
@@ -95,7 +97,7 @@ const MessagesPage = () => {
   const getOtherParticipant = (convo: Conversation) => {
     const otherId = convo.participants.find(p => p !== user.uid);
     return {
-      id: otherId,
+      id: otherId || '',
       name: otherId ? convo.participantNames[otherId] : 'Unknown User',
     };
   };
@@ -135,8 +137,11 @@ const MessagesPage = () => {
             {conversations.map(convo => {
               const otherParticipant = getOtherParticipant(convo);
               return (
-                <li key={convo.id} className="flex items-center justify-between p-6 hover:bg-gray-50 transition-colors group">
-                  <Link href={`/messages/${convo.id}`} className="flex-grow flex items-start space-x-4">
+                <li key={convo.id} className="group">
+                  <div
+                    onClick={() => setSelectedConversation(convo)}
+                    className="flex-grow flex items-start space-x-4 p-6 hover:bg-gray-50 transition-colors cursor-pointer"
+                  >
                     <div className="flex-shrink-0">
                       <Image
                         src={convo.itemImageUrl || "https://placehold.co/60x60.png"}
@@ -163,20 +168,41 @@ const MessagesPage = () => {
                         {convo.lastMessage?.text || 'No messages yet.'}
                       </p>
                     </div>
-                  </Link>
-                  <button 
-                    onClick={(e) => handleDeleteConversation(e, convo.id)}
-                    className="ml-4 p-2 rounded-full text-gray-400 hover:bg-red-100 hover:text-red-600 opacity-0 group-hover:opacity-100 transition-opacity"
-                    aria-label="Delete conversation"
-                  >
-                    <Trash2 size={20} />
-                  </button>
+                     <button 
+                        onClick={(e) => handleDeleteConversation(e, convo.id)}
+                        className="ml-4 p-2 rounded-full text-gray-400 hover:bg-red-100 hover:text-red-600 opacity-0 group-hover:opacity-100 transition-opacity"
+                        aria-label="Delete conversation"
+                      >
+                        <Trash2 size={20} />
+                      </button>
+                  </div>
                 </li>
               );
             })}
           </ul>
         )}
       </div>
+
+      {/* Chat Modal */}
+      {selectedConversation && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+            <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full h-[80vh] flex flex-col">
+                <header className="flex items-center justify-between p-4 border-b">
+                <h2 className="text-xl font-bold">Message Donor About: {selectedConversation.itemName}</h2>
+                <button onClick={() => setSelectedConversation(null)} className="text-gray-500 hover:text-gray-800">
+                    <X size={24} />
+                </button>
+                </header>
+                <div className="flex-grow overflow-hidden">
+                    <ChatApp 
+                      donationId={selectedConversation.itemId} 
+                      receiverId={getOtherParticipant(selectedConversation).id} 
+                      receiverName={getOtherParticipant(selectedConversation).name}
+                    />
+                </div>
+            </div>
+        </div>
+      )}
     </div>
   );
 };
