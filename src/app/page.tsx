@@ -89,8 +89,8 @@ const LandingPage = () => {
           />
           <HowItWorksCard
             icon={<Search size={24} className="text-blue-600" />}
-            title="Browse Requests"
-            href="/requests"
+            title="Browse Donations"
+            href="/browse"
           />
           <HowItWorksCard
             icon={<Users size={24} className="text-blue-600" />}
