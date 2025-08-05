@@ -2000,6 +2000,11 @@ code {
   background-color: hsl(var(--accent));
 }
 
+.focus\:bg-red-700:focus {
+  --tw-bg-opacity: 1;
+  background-color: rgb(185 28 28 / var(--tw-bg-opacity, 1));
+}
+
 .focus\:text-accent-foreground:focus {
   color: hsl(var(--accent-foreground));
 }
