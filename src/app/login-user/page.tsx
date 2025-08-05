@@ -39,7 +39,7 @@ const LoginUserPage = () => {
   if (!user) {
     return (
       <div className="max-w-4xl mx-auto my-10 p-8 text-center bg-white rounded-lg shadow-md">
-        <h2 className="text-2xl font-bold mb-4 text-blue-800">Access Denied</h2>
+        <h2 className="text-2xl font-bold text-blue-800">Access Denied</h2>
         <p className="text-blue-600 mb-6">You must be logged in to view this page.</p>
         <Link href="/login" className="px-6 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700">
           Go to Login
@@ -61,8 +61,8 @@ const LoginUserPage = () => {
             <Link href="/donate" className="px-6 py-2 text-white bg-green-600 rounded-md hover:bg-green-700 font-semibold shadow-sm">
               Donate
             </Link>
-            <Link href="/request" className="px-6 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 font-semibold">
-              Request
+            <Link href="/messages" className="px-6 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 font-semibold shadow-sm">
+              My Messages
             </Link>
           </div>
         </div>
@@ -94,7 +94,7 @@ const LoginUserPage = () => {
                 <PackagePlus size={48} className="mx-auto text-gray-400" />
                 <h3 className="mt-4 text-xl font-semibold text-blue-800">You haven't donated any items yet.</h3>
                 <p className="mt-2 text-blue-600">Click the button below to make your first donation!</p>
-                <Link href="/donate" className="mt-6 inline-block px-6 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 font-semibold shadow-sm">
+                <Link href="/donate" className="mt-6 inline-block px-6 py-2 text-white bg-green-600 rounded-md hover:bg-green-700 font-semibold shadow-sm">
                     Donate an Item
                 </Link>
             </div>
