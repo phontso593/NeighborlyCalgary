@@ -62,7 +62,7 @@ const Header = () => {
                                     <DropdownMenuContent className="w-56 mr-2">
                                         <DropdownMenuLabel>My Account</DropdownMenuLabel>
                                         <DropdownMenuItem asChild className="p-0">
-                                            <Link href="/donate" className="donate-btn w-full justify-start cursor-pointer m-1 p-2">
+                                            <Link href="/donate" className="w-full justify-start cursor-pointer m-1 p-2 rounded-md bg-green-600 text-white hover:bg-green-700 focus:bg-green-700 focus:text-white flex items-center">
                                                  <PackagePlus size={16} className="mr-2" />Donate
                                             </Link>
                                         </DropdownMenuItem>

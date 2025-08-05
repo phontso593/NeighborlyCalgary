@@ -58,7 +58,7 @@ const LoginUserPage = () => {
             Welcome back, {user.displayName || 'User'}
           </h1>
           <div className="flex space-x-3">
-            <Link href="/donate" className="px-6 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 font-semibold shadow-sm">
+            <Link href="/donate" className="px-6 py-2 text-white bg-green-600 rounded-md hover:bg-green-700 font-semibold shadow-sm">
               Donate
             </Link>
             <Link href="/request" className="px-6 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 font-semibold">
