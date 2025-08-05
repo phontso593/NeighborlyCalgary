@@ -5,8 +5,9 @@ import { doc, deleteDoc } from "firebase/firestore";
 import { ref, deleteObject } from "firebase/storage";
 import { db, storage } from "@/lib/firebase";
 import type { Donation } from "@/types";
-import { Tag, HeartHandshake, CalendarDays, Trash2 } from "lucide-react";
+import { Tag, HeartHandshake, CalendarDays, Trash2, Edit } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
+import { useRouter } from "next/navigation";
 
 interface MyDonationsListProps {
     donations: Donation[];
@@ -14,6 +15,7 @@ interface MyDonationsListProps {
 
 const MyDonationsList: React.FC<MyDonationsListProps> = ({ donations }) => {
     const { toast } = useToast();
+    const router = useRouter();
 
     const handleDelete = async (donation: Donation) => {
         if (!confirm(`Are you sure you want to delete the donation "${donation.title}"?`)) {
@@ -23,8 +25,18 @@ const MyDonationsList: React.FC<MyDonationsListProps> = ({ donations }) => {
         try {
             // If an image URL exists, delete the image from Firebase Storage first
             if (donation.imageUrl) {
-                const imageRef = ref(storage, donation.imageUrl);
-                await deleteObject(imageRef);
+                // This is a simple approach, but it won't work for gs:// or https:// URLs without parsing.
+                // A more robust solution might be needed if you store full URLs instead of just paths.
+                try {
+                  const imageRef = ref(storage, donation.imageUrl);
+                  await deleteObject(imageRef);
+                } catch (storageError: any) {
+                    // It's possible the image doesn't exist or the URL is invalid,
+                    // but we still want to delete the Firestore doc.
+                    if (storageError.code !== 'storage/object-not-found') {
+                       console.warn("Could not delete image from storage:", storageError);
+                    }
+                }
             }
 
             // Then delete the donation document from Firestore
@@ -36,6 +48,10 @@ const MyDonationsList: React.FC<MyDonationsListProps> = ({ donations }) => {
             const errorMessage = error instanceof Error ? error.message : "An unknown error occurred";
             toast({ variant: "destructive", title: "Deletion Failed", description: errorMessage });
         }
+    };
+
+    const handleEdit = (donationId: string) => {
+        router.push(`/donations/edit/${donationId}`);
     };
 
     return (
@@ -76,13 +92,22 @@ const MyDonationsList: React.FC<MyDonationsListProps> = ({ donations }) => {
                                         </span>
                                     </div>
                                 </div>
-                                <button
-                                    onClick={() => handleDelete(donation)}
-                                    className="w-full mt-auto bg-red-600 text-white font-bold py-2 px-4 rounded-md hover:bg-red-700 transition-colors flex items-center justify-center gap-2"
-                                >
-                                    <Trash2 size={16} />
-                                    Delete
-                                </button>
+                                <div className="mt-auto flex flex-col gap-2">
+                                    <button
+                                        onClick={() => handleEdit(donation.id)}
+                                        className="w-full bg-green-600 text-white font-bold py-2 px-4 rounded-md hover:bg-green-700 transition-colors flex items-center justify-center gap-2"
+                                    >
+                                        <Edit size={16} />
+                                        Edit
+                                    </button>
+                                    <button
+                                        onClick={() => handleDelete(donation)}
+                                        className="w-full bg-red-600 text-white font-bold py-2 px-4 rounded-md hover:bg-red-700 transition-colors flex items-center justify-center gap-2"
+                                    >
+                                        <Trash2 size={16} />
+                                        Delete
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     ))}
