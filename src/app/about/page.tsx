@@ -2,6 +2,7 @@
 import React from 'react';
 import Image from 'next/image';
 import phontsoImage from '@/assets/phontso.png';
+import impactImage from '@/assets/pexels-shkrabaanthony-7345444.jpg';
 
 const CollaborationIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
@@ -27,9 +28,9 @@ const AboutPage = () => {
     <div className="bg-white text-blue-700 font-sans">
       <div className="max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
         
-        <div className="mb-12 text-center">
+        <div className="mb-12">
           <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-blue-800">About Us</h1>
-          <p className="mt-4 text-lg text-blue-600 max-w-3xl mx-auto">
+          <p className="mt-4 text-lg text-blue-600 max-w-3xl">
             Neighbourly is a non-profit organization dedicated to fostering positive change and empowering communities through collaborative initiatives. Our mission is to create a more equitable and sustainable world by addressing critical social and environmental challenges.
           </p>
         </div>
@@ -50,7 +51,7 @@ const AboutPage = () => {
 
         <div className="w-full aspect-video rounded-xl overflow-hidden mb-12 shadow-lg">
           <Image 
-            src="https://placehold.co/800x450.png"
+            src={impactImage}
             alt="Community Impact"
             data-ai-hint="community charity"
             width={800}
