@@ -114,7 +114,7 @@ const DonationsList: React.FC<DonationsListProps> = ({ donations: initialDonatio
                                     </button>
                                      <button onClick={() => handleOpenMessageModal(donation)} className="w-full flex items-center justify-center bg-gray-600 text-white font-bold py-2 px-4 rounded-md hover:bg-gray-700 transition-colors">
                                         <MessageSquare size={16} className="mr-2"/>
-                                        Message {donation.ownerName || 'Donor'}
+                                        Message Donor
                                     </button>
                                 </div>
                             </div>
@@ -158,7 +158,7 @@ const DonationsList: React.FC<DonationsListProps> = ({ donations: initialDonatio
                             className="w-full mt-4 flex items-center justify-center bg-green-600 text-white font-bold py-2 px-4 rounded-md hover:bg-green-700 transition-colors"
                         >
                             <MessageSquare size={16} className="mr-2"/>
-                            Message {selectedDonation.ownerName || 'Donor'}
+                            Message Donor
                         </button>
                     </div>
                 </div>
