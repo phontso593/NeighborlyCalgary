@@ -1,8 +1,7 @@
 {
-  "/donate/page": "app/donate/page.js",
-  "/requested/page": "app/requested/page.js",
   "/browse/page": "app/browse/page.js",
   "/messages/page": "app/messages/page.js",
   "/messages/[chatId]/page": "app/messages/[chatId]/page.js",
-  "/page": "app/page.js"
+  "/page": "app/page.js",
+  "/login-user/page": "app/login-user/page.js"
 }

@@ -1,10 +1,10 @@
 
 'use client';
-import React, { useState } from "react";
+import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import logo from '@/assets/whitePrancheta 12.png';
-import { LogOut, PackagePlus, Menu, X, LogIn, User, MessageSquare, Box, Heart } from 'lucide-react';
+import { LogOut, PackagePlus, User, MessageSquare, Box, Heart, LogIn } from 'lucide-react';
 import { useAuth } from "@/hooks/useAuth";
 import { getAuth, signOut } from "firebase/auth";
 import { useRouter } from "next/navigation";
@@ -18,59 +18,18 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-const navLinksConfig = [
-    { href: "/login", label: "Login", show: 'loggedOut', isButton: true, icon: <LogIn size={16} className="mr-2" />, className: "login-btn", mobileClassName: "bg-green-500" },
-    { href: "/register", label: "Sign Up", show: 'loggedOut', isButton: true, icon: <PackagePlus size={16} className="mr-2" />, className: "signup-btn", mobileClassName: "bg-blue-700" },
-];
-
 const Header = () => {
     const { user, loading } = useAuth();
     const auth = getAuth();
     const router = useRouter();
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     const handleLogout = async () => {
         try {
             await signOut(auth);
-            setIsMenuOpen(false);
             router.push('/');
         } catch (error) {
             console.error("Failed to log out", error);
         }
-    };
-
-    const closeMenu = () => setIsMenuOpen(false);
-
-    const renderLinks = (isMobile = false) => {
-        const linksToRender = navLinksConfig.filter(link =>
-            link.show === 'always' ||
-            (user && link.show === 'loggedIn') ||
-            (!user && link.show === 'loggedOut')
-        );
-
-        return linksToRender.map(link => {
-            let className = isMobile ? "mobile-nav-link" : "nav-link";
-            if (link.isButton) {
-                className = isMobile ? `${' '}${link.mobileClassName}` : link.className;
-            }
-             if (isMobile) {
-              return (
-                <Link key={link.href} href={link.href} className={className} onClick={closeMenu}>
-                    <span className="flex items-center">{link.icon}{link.label}</span>
-                </Link>
-              )
-            }
-
-             // Render non-button links for desktop
-            if(!link.isButton){
-                return (
-                    <Link key={link.href} href={link.href} className={className}>
-                       {link.label}
-                    </Link>
-                );
-            }
-            return null;
-        });
     };
 
     const getInitials = (name: string | null | undefined) => {
@@ -81,14 +40,13 @@ const Header = () => {
     return (
         <header className="bg-[#0404e2] text-white p-4 flex justify-between items-center w-full shadow-md sticky top-0 z-50">
             <div className="flex-1"></div>
-            <Link href={user ? "/login-user" : "/"} className="flex items-center" onClick={closeMenu}>
+            <Link href={user ? "/login-user" : "/"} className="flex items-center">
                 <Image src={logo} alt="Neighborly Logo" width={50} height={50} className="h-12 w-auto" priority />
             </Link>
 
             {/* Combined Desktop Navigation and Profile */}
             <div className="flex-1 flex justify-end items-center space-x-4">
                  <nav className="hidden md:flex items-center space-x-2">
-                     {renderLinks()}
                  </nav>
                 
                 {!loading && (
@@ -149,31 +107,7 @@ const Header = () => {
                         )}
                     </>
                 )}
-                 {/* Mobile Menu Button */}
-                <button
-                    onClick={() => setIsMenuOpen(!isMenuOpen)}
-                    className="md:hidden text-white focus:outline-none"
-                    aria-controls="mobile-menu"
-                    aria-expanded={isMenuOpen}
-                >
-                    {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
-                </button>
             </div>
-
-
-            {/* Mobile Navigation Menu */}
-            {isMenuOpen && (
-                <div id="mobile-menu" className="md:hidden absolute top-full left-0 right-0 bg-[#0404e2] bg-opacity-95 p-4 shadow-lg">
-                    <nav className="flex flex-col space-y-2">
-                        {user && (
-                             <Link href="/donate" className="mobile-nav-link bg-sky-500" onClick={closeMenu}>
-                                <span className="flex items-center"><PackagePlus size={16} className="mr-2" />Donate</span>
-                            </Link>
-                        )}
-                        {renderLinks(true)}
-                    </nav>
-                </div>
-            )}
         </header>
     );
 };
