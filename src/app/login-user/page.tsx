@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import Link from 'next/link';
 import Image from 'next/image';
-import { HelpCircle, Search, MessageSquare, PackagePlus } from 'lucide-react';
+import { HelpCircle, Search, MessageSquare, PackagePlus, Box } from 'lucide-react';
 import { collection, query, where, onSnapshot, limit } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import type { Donation } from "@/types";
@@ -105,9 +105,9 @@ const LoginUserPage = () => {
               <Search className="h-6 w-6 text-blue-600 mr-4" />
               <span className="font-semibold text-gray-800">Browse</span>
             </Link>
-            <Link href="/messages" className="flex items-center p-6 bg-white rounded-lg shadow-md border border-gray-200 hover:shadow-lg hover:border-blue-500 transition">
-              <MessageSquare className="h-6 w-6 text-blue-600 mr-4" />
-              <span className="font-semibold text-gray-800">Messages</span>
+            <Link href="/donate" className="flex items-center p-6 bg-white rounded-lg shadow-md border border-gray-200 hover:shadow-lg hover:border-blue-500 transition">
+              <PackagePlus className="h-6 w-6 text-blue-600 mr-4" />
+              <span className="font-semibold text-gray-800">Donate</span>
             </Link>
           </div>
         </div>
