@@ -4,6 +4,7 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import landingImage from '@/assets/logo-landingpage.jpg';
 import HowItWorksCard from '@/components/HowItWorksCard';
 import DonationCard from '@/components/DonationCard';
@@ -12,8 +13,20 @@ import booksImage from '@/assets/pexels-pixabay-159711.jpg';
 import clothingImage from '@/assets/pexels-hngstrm-1210484.jpg';
 import toysImage from '@/assets/pexels-polesietoys-6129382.jpg';
 import successImage from '@/assets/pexels-julia-m-cameron-6994870.jpg';
+import { useAuth } from '@/hooks/useAuth';
 
 const LandingPage = () => {
+  const { user } = useAuth();
+  const router = useRouter();
+
+  const handleDonateClick = () => {
+    if (user) {
+      router.push('/donate');
+    } else {
+      router.push('/login-required');
+    }
+  };
+
   return (
     <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
       {/* Hero Section */}
@@ -72,7 +85,7 @@ const LandingPage = () => {
           <HowItWorksCard
             icon={<Gift size={24} className="text-blue-600" />}
             title="Donate Items"
-            href="/donate"
+            onClick={handleDonateClick}
           />
           <HowItWorksCard
             icon={<Search size={24} className="text-blue-600" />}
@@ -154,9 +167,9 @@ const LandingPage = () => {
         <h2 className="text-3xl font-bold text-blue-800 mb-6">
           Ready to Make a Difference?
         </h2>
-        <Link href="/donate" className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-8 rounded-md transition-colors duration-300 inline-block">
+        <button onClick={handleDonateClick} className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-8 rounded-md transition-colors duration-300 inline-block">
           Start Donating
-        </Link>
+        </button>
       </section>
     </main>
   );

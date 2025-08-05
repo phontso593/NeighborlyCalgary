@@ -865,6 +865,9 @@ video {
 .min-h-screen {
   min-height: 100vh;
 }
+.min-h-\[calc\(100vh-200px\)\] {
+  min-height: calc(100vh - 200px);
+}
 .w-10 {
   width: 2.5rem;
 }
@@ -1166,6 +1169,10 @@ video {
 }
 .border-transparent {
   border-color: transparent;
+}
+.border-yellow-300 {
+  --tw-border-opacity: 1;
+  border-color: rgb(253 224 71 / var(--tw-border-opacity, 1));
 }
 .bg-\[\#0404e2\] {
   --tw-bg-opacity: 1;
@@ -1564,6 +1571,10 @@ video {
 .text-white {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity, 1));
+}
+.text-yellow-500 {
+  --tw-text-opacity: 1;
+  color: rgb(234 179 8 / var(--tw-text-opacity, 1));
 }
 .underline-offset-4 {
   text-underline-offset: 4px;
