@@ -29,8 +29,8 @@ const AboutPage = () => {
       <div className="max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
         
         <div className="mb-12">
-          <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-blue-800">About Us</h1>
-          <p className="mt-4 text-lg text-blue-600 max-w-3xl">
+          <h2 className="text-3xl font-bold text-blue-800">About Us</h2>
+          <p className="mt-4 text-base text-blue-600 max-w-3xl">
             Neighbourly is a non-profit organization dedicated to fostering positive change and empowering communities through collaborative initiatives. Our mission is to create a more equitable and sustainable world by addressing critical social and environmental challenges.
           </p>
         </div>
