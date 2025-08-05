@@ -57,14 +57,6 @@ const LoginUserPage = () => {
           <h1 className="text-4xl font-bold text-blue-800 mb-4 sm:mb-0">
             Welcome back, {user.displayName || 'User'}
           </h1>
-          <div className="flex space-x-3">
-            <Link href="/donate" className="px-6 py-2 text-white bg-green-600 rounded-md hover:bg-green-700 font-semibold shadow-sm">
-              Donate
-            </Link>
-            <Link href="/messages" className="px-6 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 font-semibold shadow-sm">
-              My Messages
-            </Link>
-          </div>
         </div>
 
         {/* My Donations Section */}
