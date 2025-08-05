@@ -1,3 +1,4 @@
+
 'use client';
 import React, { useState } from "react";
 import Link from "next/link";
@@ -79,12 +80,13 @@ const Header = () => {
 
     return (
         <header className="bg-[#0404e2] text-white p-4 flex justify-between items-center w-full shadow-md sticky top-0 z-50">
+            <div className="flex-1"></div>
             <Link href={user ? "/login-user" : "/"} className="flex items-center" onClick={closeMenu}>
                 <Image src={logo} alt="Neighborly Logo" width={50} height={50} className="h-12 w-auto" priority />
             </Link>
 
             {/* Combined Desktop Navigation and Profile */}
-            <div className="flex items-center space-x-4">
+            <div className="flex-1 flex justify-end items-center space-x-4">
                  <nav className="hidden md:flex items-center space-x-2">
                      {renderLinks()}
                  </nav>
