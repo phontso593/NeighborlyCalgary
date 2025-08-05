@@ -18,7 +18,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 const navLinksConfig = [
-    { href: "/donate", label: "Donate", show: 'loggedIn', isButton: true, icon: <PackagePlus size={16} className="mr-2" />, className: "donate-btn", mobileClassName: "bg-sky-500" },
     { href: "/login", label: "Login", show: 'loggedOut', isButton: true, icon: <LogIn size={16} className="mr-2" />, className: "login-btn", mobileClassName: "bg-green-500" },
     { href: "/register", label: "Sign Up", show: 'loggedOut', isButton: true, icon: <PackagePlus size={16} className="mr-2" />, className: "signup-btn", mobileClassName: "bg-blue-700" },
 ];
@@ -51,7 +50,6 @@ const Header = () => {
         return linksToRender.map(link => {
             let className = isMobile ? "mobile-nav-link" : "nav-link";
             if (link.isButton) {
-                // For desktop, we don't render these buttons here anymore, but leaving logic for mobile
                 className = isMobile ? `${' '}${link.mobileClassName}` : link.className;
             }
              if (isMobile) {
@@ -95,9 +93,6 @@ const Header = () => {
                     <>
                         {user ? (
                              <>
-                                <Link href="/donate" className="donate-btn hidden md:flex">
-                                    <PackagePlus size={16} className="mr-2" />Donate
-                                </Link>
                                 <DropdownMenu>
                                     <DropdownMenuTrigger asChild>
                                         <Button variant="outline" className="rounded-full w-10 h-10 bg-blue-500 text-white border-blue-400 hover:bg-blue-600">
@@ -106,6 +101,11 @@ const Header = () => {
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent className="w-56 mr-2">
                                         <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                                        <DropdownMenuItem asChild className="p-0">
+                                            <Link href="/donate" className="donate-btn w-full justify-start cursor-pointer m-1 p-2">
+                                                 <PackagePlus size={16} className="mr-2" />Donate
+                                            </Link>
+                                        </DropdownMenuItem>
                                         <DropdownMenuSeparator />
                                         <DropdownMenuItem onClick={() => router.push('/profile')}>
                                             <User className="mr-2 h-4 w-4" />
@@ -163,6 +163,11 @@ const Header = () => {
             {isMenuOpen && (
                 <div id="mobile-menu" className="md:hidden absolute top-full left-0 right-0 bg-[#0404e2] bg-opacity-95 p-4 shadow-lg">
                     <nav className="flex flex-col space-y-2">
+                        {user && (
+                             <Link href="/donate" className="mobile-nav-link bg-sky-500" onClick={closeMenu}>
+                                <span className="flex items-center"><PackagePlus size={16} className="mr-2" />Donate</span>
+                            </Link>
+                        )}
                         {renderLinks(true)}
                     </nav>
                 </div>
