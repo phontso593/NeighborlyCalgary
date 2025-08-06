@@ -1,9 +1,3 @@
 {
-  "/page": "app/page.js",
-  "/login-user/page": "app/login-user/page.js",
-  "/donations/page": "app/donations/page.js",
-  "/about/page": "app/about/page.js",
-  "/browse/page": "app/browse/page.js",
-  "/donate/page": "app/donate/page.js",
-  "/messages/page": "app/messages/page.js"
+  "/page": "app/page.js"
 }
