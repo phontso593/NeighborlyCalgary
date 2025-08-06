@@ -41,9 +41,9 @@ const EditDonationPage = () => {
             const docSnap = await getDoc(docRef);
 
             if (docSnap.exists()) {
-                const data = docSnap.data() as Donation;
+                const data = docSnap.data() as Omit<Donation, 'id'>;
                 if (data.donatorId === user.uid) {
-                    setDonation({ id: docSnap.id, ...data });
+                    setDonation({ id: docSnap.id, ...data } as Donation);
                     setTitle(data.title);
                     setDescription(data.description);
                     setCategory(data.category);

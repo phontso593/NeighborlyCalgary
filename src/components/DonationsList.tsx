@@ -103,9 +103,6 @@ const DonationsList: React.FC<DonationsListProps> = ({ donations: initialDonatio
                                         </span>
                                     </div>
                                 </div>
-                                <p className="text-sm text-gray-700 flex-grow mb-4 h-16 overflow-hidden">
-                                    {donation.description}
-                                </p>
                                 <div className="mt-auto flex flex-col gap-2">
                                     <button className="w-full bg-blue-600 text-white font-bold py-2 px-4 rounded-md hover:bg-blue-700 transition-colors"
                                         onClick={() => setSelectedDonation(donation)}

@@ -110,21 +110,18 @@ const LandingPage = () => {
             imageUrl={booksImage}
             imageAlt="Books for Education"
             title="Books for Education"
-            description="Support local schools with educational materials."
             data-ai-hint="books education"
           />
           <DonationCard
             imageUrl={clothingImage}
             imageAlt="Clothing for All Seasons"
             title="Clothing for All Seasons"
-            description="Provide essential clothing to those in need."
             data-ai-hint="clothing donation"
           />
           <DonationCard
             imageUrl={toysImage}
             imageAlt="Toys for Children"
             title="Toys for Children"
-            description="Bring joy to children with donated toys."
             data-ai-hint="toys children"
           />
         </div>
