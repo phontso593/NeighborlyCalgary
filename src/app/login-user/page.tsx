@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import Link from 'next/link';
 import Image from 'next/image';
-import { HelpCircle, Search, MessageSquare, PackagePlus, Box } from 'lucide-react';
+import { HelpCircle, Search, PackagePlus } from 'lucide-react';
 import { collection, query, where, onSnapshot, limit } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import type { Donation } from "@/types";
@@ -60,8 +60,13 @@ const LoginUserPage = () => {
         </div>
 
         {/* My Donations Section */}
-        <div>
-          <h2 className="text-2xl font-bold text-blue-800 mb-6">My Donations</h2>
+        <Link href="/donations" className="cursor-pointer">
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-2xl font-bold text-blue-800">My Donations</h2>
+            <div className="px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700">
+                View All
+            </div>
+          </div>
           {myDonations.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
               {myDonations.map(donation => (
@@ -91,7 +96,7 @@ const LoginUserPage = () => {
                 </Link>
             </div>
           )}
-        </div>
+        </Link>
         
         {/* Quick Actions Section */}
         <div className="mt-16">
