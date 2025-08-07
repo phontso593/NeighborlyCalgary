@@ -54,7 +54,7 @@ const LoginUserPage = () => {
         
         {/* Header Section */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-10">
-          <h1 className="text-4xl font-bold text-blue-800 mb-4 sm:mb-0">
+          <h1 className="text-3xl font-bold text-blue-800 mb-4 sm:mb-0">
             Welcome to Neighborly
           </h1>
         </div>
