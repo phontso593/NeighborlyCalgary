@@ -83,17 +83,17 @@ const LandingPage = () => {
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
           <HowItWorksCard
-            icon={<Gift size={24} className="text-blue-600" />}
+            icon={<Gift size={24} className="text-green-600" />}
             title="Donate Items"
             onClick={handleDonateClick}
           />
           <HowItWorksCard
-            icon={<Search size={24} className="text-blue-600" />}
+            icon={<Search size={24} className="text-green-600" />}
             title="Browse Donations"
             href="/browse"
           />
           <HowItWorksCard
-            icon={<Users size={24} className="text-blue-600" />}
+            icon={<Users size={24} className="text-green-600" />}
             title="Connect with Community"
             href="/about"
           />
