@@ -54,7 +54,7 @@ const BrowsePage = () => {
           const data = doc.data() || {};
           return { id: doc.id, ...data } as Donation;
       });
-      const lastDoc = documentSnapshots.docs[documentSnapshots.docs.length - 1];
+      const lastDoc = documentSnapshots.docs[documentSnapshots.docs.length - 1] as QueryDocumentSnapshot<DocumentData> | undefined;
 
       setLastVisible(lastDoc || null);
       setHasMore(newDonations.length === PAGE_SIZE);
