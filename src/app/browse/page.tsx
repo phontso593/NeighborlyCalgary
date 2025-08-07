@@ -27,19 +27,25 @@ const BrowsePage = () => {
     }
 
     try {
-      let q = query(
-        collection(db, "donations"),
-        orderBy("createdAt", "desc"),
-        limit(PAGE_SIZE)
-      );
-
-      if (!initial && lastVisible) {
+      let q;
+      if (initial) {
+        q = query(
+          collection(db, "donations"),
+          orderBy("createdAt", "desc"),
+          limit(PAGE_SIZE)
+        );
+      } else if (lastVisible) {
         q = query(
           collection(db, "donations"),
           orderBy("createdAt", "desc"),
           startAfter(lastVisible),
-          limit(PAGE_size)
+          limit(PAGE_SIZE)
         );
+      } else {
+        // No more documents to fetch
+        setHasMore(false);
+        setLoadingMore(false);
+        return;
       }
       
       const documentSnapshots = await getDocs(q);
