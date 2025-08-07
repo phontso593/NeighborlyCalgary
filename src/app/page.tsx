@@ -44,19 +44,19 @@ const LandingPage = () => {
             <div className="flex flex-col sm:flex-row flex-wrap gap-4">
               <Link
                 href="/login"
-                className="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-6 rounded-md transition-colors duration-300 text-center"
+                className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-6 rounded-md transition-colors duration-300 text-center"
               >
                 Login
               </Link>
               <Link
                 href="/register"
-                className="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-6 rounded-md transition-colors duration-300 text-center"
+                className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-6 rounded-md transition-colors duration-300 text-center"
               >
                 Sign Up
               </Link>
               <Link
                 href="/browse"
-                className="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-6 rounded-md transition-colors duration-300 text-center"
+                className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-6 rounded-md transition-colors duration-300 text-center"
               >
                 Continue as Guest
               </Link>
