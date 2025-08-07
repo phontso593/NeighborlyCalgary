@@ -50,7 +50,10 @@ const BrowsePage = () => {
       
       const documentSnapshots = await getDocs(q);
       
-      const newDonations = documentSnapshots.docs.map(doc => ({ id: doc.id, ...doc.data() } as Donation));
+      const newDonations = documentSnapshots.docs.map(doc => {
+          const data = doc.data() || {};
+          return { id: doc.id, ...data } as Donation;
+      });
       const lastDoc = documentSnapshots.docs[documentSnapshots.docs.length - 1];
 
       setLastVisible(lastDoc || null);
