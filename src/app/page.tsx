@@ -151,7 +151,7 @@ const LandingPage = () => {
               <p className="text-blue-700 mb-6">
                 Read how our platform helped connect donors with recipients, creating a positive impact in our neighborhood through shared resources and support.
               </p>
-              <Link href="/about" className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md transition-colors duration-300">
+              <Link href="/about" className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-md transition-colors duration-300">
                 Read...
               </Link>
             </div>
@@ -164,7 +164,7 @@ const LandingPage = () => {
         <h2 className="text-3xl font-bold text-blue-800 mb-6">
           Ready to Make a Difference?
         </h2>
-        <button onClick={handleDonateClick} className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-8 rounded-md transition-colors duration-300 inline-block">
+        <button onClick={handleDonateClick} className="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-8 rounded-md transition-colors duration-300 inline-block">
           Start Donating
         </button>
       </section>
