@@ -67,62 +67,22 @@ const AboutPage = () => {
           </p>
           <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 text-center">
             <div className="flex flex-col items-center">
-              <Image 
-                src="https://placehold.co/200x200.png"
-                alt="Ruben Macalma"
-                data-ai-hint="portrait man"
-                width={160}
-                height={160}
-                className="rounded-full shadow-md"
-              />
               <h3 className="mt-4 text-lg font-bold text-blue-800">Ruben Macalma </h3>
               <p className="text-sm text-blue-500">Front-end and Back-end coder</p>
             </div>
             <div className="flex flex-col items-center">
-              <Image 
-                src="https://placehold.co/200x200.png"
-                alt="Jaspreet Kaur"
-                data-ai-hint="portrait woman"
-                width={160}
-                height={160}
-                className="rounded-full shadow-md"
-              />
               <h3 className="mt-4 text-lg font-bold text-blue-800">Jaspreet Kaur </h3>
               <p className="text-sm text-blue-500">Front-end and Back-end coder</p>
             </div>
             <div className="flex flex-col items-center">
-              <Image 
-                src={phontsoImage}
-                alt="Phontso Tsetan"
-                data-ai-hint="portrait man"
-                width={160}
-                height={160}
-                className="rounded-full shadow-md"
-              />
               <h3 className="mt-4 text-lg font-bold text-blue-800">Phontso Tsetan </h3>
               <p className="text-sm text-blue-500">Team Leader and Backend manager</p>
             </div>
             <div className="flex flex-col items-center">
-              <Image 
-                src="https://placehold.co/200x200.png"
-                alt="Juan Buritica"
-                data-ai-hint="portrait man"
-                width={160}
-                height={160}
-                className="rounded-full shadow-md"
-              />
               <h3 className="mt-4 text-lg font-bold text-blue-800">Juan Buritica</h3>
               <p className="text-sm text-blue-500">Front-end Designe</p>
             </div>
             <div className="flex flex-col items-center">
-              <Image 
-                src="https://placehold.co/200x200.png"
-                alt="Nathalie Sales"
-                data-ai-hint="portrait woman"
-                width={160}
-                height={160}
-                className="rounded-full shadow-md"
-              />
               <h3 className="mt-4 text-lg font-bold text-blue-800">Nathalie Sales</h3>
               <p className="text-sm text-blue-500">Marketing and Designe</p>
             </div>
