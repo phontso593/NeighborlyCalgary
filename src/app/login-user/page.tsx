@@ -74,11 +74,10 @@ const LoginUserPage = () => {
                      data-ai-hint="donation item"
                      width={600}
                      height={400}
-                     className="w-full h-48 object-cover"
+                     className="w-full h-48 object-contain"
                    />
                    <div className="p-5">
                      <h3 className="font-bold text-lg text-blue-800 truncate">{donation.title}</h3>
-                     <p className="text-blue-600 mt-1 truncate">{donation.description}</p>
                    </div>
                  </div>
               ))}
