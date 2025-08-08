@@ -1,3 +1,4 @@
+
 'use client';
 import React, { useEffect, useState } from 'react';
 import { collection, query, where, onSnapshot, getDoc, doc, deleteDoc } from 'firebase/firestore';
@@ -154,8 +155,8 @@ const MessagesPage = () => {
                     <div className="flex-1 min-w-0">
                       <div className="flex justify-between items-center">
                         <div>
-                          <p className="text-sm text-gray-500">
-                              Chat with {otherParticipant.name}
+                          <p className="text-lg font-semibold text-green-600">
+                              {otherParticipant.name}
                           </p>
                           <p className="text-md font-bold text-blue-700 truncate">{convo.itemName}</p>
                         </div>
@@ -188,7 +189,7 @@ const MessagesPage = () => {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
             <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full h-[80vh] flex flex-col">
                 <header className="flex items-center justify-between p-4 border-b">
-                <h2 className="text-xl font-bold">Message Donor About: {selectedConversation.itemName}</h2>
+                <h2 className="text-xl font-bold">Message {getOtherParticipant(selectedConversation).name} About: {selectedConversation.itemName}</h2>
                 <button onClick={() => setSelectedConversation(null)} className="text-gray-500 hover:text-gray-800">
                     <X size={24} />
                 </button>
